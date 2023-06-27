@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "93361298385",
+    "project_id": "vueflow-91fe2",
+    "storage_bucket": "vueflow-91fe2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:93361298385:android:240d778884a8a9e8da5ef0",
+        "android_client_info": {
+          "package_name": "com.livestream.livestream"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "93361298385-s0usacnnjt3h6nr7iq69hgk0vn8eornc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD161wRfbs4AdFaVETg0RTXRGqV-A0lev8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "93361298385-s0usacnnjt3h6nr7iq69hgk0vn8eornc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
