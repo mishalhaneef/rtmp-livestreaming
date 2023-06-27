@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
-
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:livestream/core/colors.dart';
 import 'package:livestream/core/constants.dart';
+import 'package:livestream/features/authentication/application/authentication_controller.dart';
 import 'package:livestream/features/authentication/presentation/registration.dart';
 import 'package:livestream/routes/app_routes.dart';
 import 'package:livestream/widgets/custom_button.dart';
 import 'package:livestream/widgets/textfield.dart';
 import 'package:livestream/widgets/splash_logo.dart';
+import 'package:provider/provider.dart';
 
 import '../../../bottom_nav.dart';
 
@@ -15,6 +17,8 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authController =
+        Provider.of<AuthenticationController>(context, listen: false);
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -26,11 +30,13 @@ class LoginScreen extends StatelessWidget {
           ),
           Constants.height50,
           Constants.height50,
-          const AppTextField(
+          AppTextField(
+            controller: authController.emailController,
             hint: 'Email',
           ),
           Constants.height30,
-          const AppTextField(
+          AppTextField(
+            controller: authController.passwordController,
             hint: 'Password',
           ),
           Constants.height20,
@@ -57,19 +63,36 @@ class LoginScreen extends StatelessWidget {
             ),
           ),
           const Spacer(),
-          AppButton(
-            hint: const Text(
-              'LOGIN',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
+          Consumer<AuthenticationController>(
+            builder: (context, value, child) => AppButton(
+              hint: const Text(
+                'LOGIN',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
+              onTap: () async {
+                final email = value.emailController.text;
+                final password = value.passwordController.text;
+                if (email.isEmpty) {
+                  Fluttertoast.showToast(msg: "Enter Email");
+                } else if (password.isEmpty) {
+                  Fluttertoast.showToast(msg: "Enter password");
+                } else {
+                  bool authenticated = await value.login(email, password);
+
+                  if (authenticated) {
+                    if (context.mounted) {
+                      NavigationHandler.navigateOff(
+                          context, const RootScreen());
+                    }
+                  }
+                }
+              },
+              color: Palatte.themeGreenColor,
             ),
-            onTap: () {
-              NavigationHandler.navigateOff(context, const RootScreen());
-            },
-            color: Palatte.themeGreenColor,
           ),
           Constants.height50,
           Constants.height50,

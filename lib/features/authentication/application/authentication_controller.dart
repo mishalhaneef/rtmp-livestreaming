@@ -1,0 +1,86 @@
+import 'dart:developer';
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:livestream/configs/api_base_service.dart';
+import 'package:livestream/configs/api_end_points.dart';
+import 'package:livestream/services/auth/firebase_auth_fasade.dart';
+
+class AuthenticationController extends ChangeNotifier {
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController nameController = TextEditingController();
+  TextEditingController usernameController = TextEditingController();
+
+  FirebaseAuthService firebaseAuthService = FirebaseAuthService();
+  BaseApiService baseApiService = BaseApiService();
+  bool isSigned = false;
+
+  Future<bool> login(
+    String email,
+    String password,
+  ) async {
+    try {
+      if (email.isEmpty) {
+        Fluttertoast.showToast(msg: 'Enter Email');
+      } else if (password.isEmpty) {
+        Fluttertoast.showToast(msg: 'Enter Password');
+      } else {
+        final userCredential = await firebaseAuthService
+            .signinWithEmailAndPassword(email, password);
+
+        if (userCredential != null) {
+          final body = {
+            "email": email,
+            "password": password,
+          };
+          final response =
+              await baseApiService.postApiCall(ApiEndPoints.login, body: body);
+          if (response != null) {
+            return true;
+          }
+        }
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+    return false;
+  }
+
+  Future<bool> register(
+    String username,
+    String fullName,
+    String email,
+    String password,
+  ) async {
+    try {
+      if (username.isEmpty) {
+        Fluttertoast.showToast(msg: 'Enter username');
+      } else if (password.isEmpty) {
+        Fluttertoast.showToast(msg: 'Enter Password');
+      } else if (fullName.isEmpty) {
+        Fluttertoast.showToast(msg: 'Enter Full Name');
+      } else if (email.isEmpty) {
+        Fluttertoast.showToast(msg: 'Enter Email');
+      } else {
+        final userCredential = await firebaseAuthService
+            .registerWithEmailAndPassword(email, password);
+        if (userCredential != null) {
+          final body = {
+            "username": username,
+            "name": fullName,
+            "email": email,
+            "password": password,
+          };
+          final response = await baseApiService
+              .postApiCall(ApiEndPoints.register, body: body);
+          if (response != null) {
+            return true;
+          }
+        }
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+    return false;
+  }
+}
