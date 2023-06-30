@@ -3,4 +3,5 @@ class ApiEndPoints {
   static String register = '/auth/register/';
   static String login = '/auth/login/';
   static String userDetails = '/auth/user/';
+  static String search = '/search/';
 }

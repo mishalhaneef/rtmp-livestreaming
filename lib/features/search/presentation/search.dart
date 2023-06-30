@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:livestream/core/colors.dart';
 import 'package:livestream/core/constants.dart';
+import 'package:livestream/core/debouncer.dart';
+import 'package:livestream/core/indicator.dart';
 import 'package:livestream/features/search/application/search_controller.dart';
 import 'package:provider/provider.dart';
 
@@ -14,6 +16,8 @@ class SearchScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    TextEditingController userSearchTextfieldController =
+        TextEditingController();
     return Scaffold(
       body: Consumer<UserSearchController>(
         builder: (context, value, child) => Column(
@@ -29,34 +33,46 @@ class SearchScreen extends StatelessWidget {
             Constants.height30,
             AppTextField(
               hint: 'Search by username',
+              controller: userSearchTextfieldController,
               suffixIcon: const Padding(
                 padding: EdgeInsets.only(right: 10),
                 child: Icon(Icons.search),
               ),
-              onChanged: (p0) => value.onSearch(),
+              onChanged: (p0) {
+                Debouncer _debouncer =
+                    Debouncer(delay: const Duration(milliseconds: 500));
+
+                _debouncer.debounce(() async {
+                  await value.searchUsers(userSearchTextfieldController.text);
+                });
+              },
             ),
             Constants.height50,
             if (value.isSearching)
+              progressIndicator(Colors.black)
+            else if (value.searchResult.users == null)
+              const SizedBox()
+            else if (value.searchResult.users != null)
               ListView.separated(
                 physics: const BouncingScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: 4,
+                itemCount: value.searchResult.users!.length,
                 itemBuilder: (BuildContext context, int index) {
+                  final user = value.searchResult.users![index];
                   return ListTile(
-                    leading: const CircleAvatar(
+                    leading: CircleAvatar(
                       maxRadius: 30,
-                      backgroundImage: NetworkImage(
-                          'https://www.mnp.ca/-/media/foundation/integrations/personnel/2020/12/16/13/57/personnel-image-4483.jpg?h=800&w=600&hash=9D5E5FCBEE00EB562DCD8AC8FDA8433D'),
+                      backgroundImage: NetworkImage(user.image!),
                     ),
-                    title: const Column(
+                    title: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Dan',
-                          style: TextStyle(
+                          user.username ?? '',
+                          style: const TextStyle(
                               fontSize: 18, fontWeight: FontWeight.bold),
                         ),
-                        SizedBox(height: 5),
+                        const SizedBox(height: 5),
                       ],
                     ),
                     trailing: Column(

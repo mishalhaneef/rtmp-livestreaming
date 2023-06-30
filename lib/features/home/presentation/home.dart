@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:livestream/core/colors.dart';
 import 'package:livestream/core/constants.dart';
+import 'package:livestream/core/indicator.dart';
 import 'package:livestream/features/home/presentation/widgets/fyp.dart';
 import 'package:livestream/features/home/presentation/widgets/welcome_text.dart';
 import 'package:provider/provider.dart';
@@ -18,25 +19,30 @@ class HomeScreen extends StatelessWidget {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       await UserPreferenceManager.getUserDetails(userController);
     });
-    return Scaffold(
-        body: Consumer<UserController>(
-      builder: (context, value, child) => ListView(
-        physics: const BouncingScrollPhysics(),
-        children: [
-          WelcomeText(userFullName: value.userModel.user!.name),
-          Constants.height20,
-          // const AppTextField(
-          //   hint: 'Search...',
-          //   suffixIcon: Padding(
-          //     padding: EdgeInsets.only(right: 10),
-          //     child: Icon(Icons.search),
-          //   ),
-          // ),
-          // Constants.height30,
-          _buildFYPlabel(),
-          const ForYouPage()
-        ],
-      ),
+    return Scaffold(body: Consumer<UserController>(
+      builder: (context, value, child) {
+        if (value.isFetching || value.userModel.user == null) {
+          return progressIndicator(Colors.black);
+        } else {
+          return ListView(
+            physics: const BouncingScrollPhysics(),
+            children: [
+              WelcomeText(userFullName: value.userModel.user!.name),
+              Constants.height20,
+              // const AppTextField(
+              //   hint: 'Search...',
+              //   suffixIcon: Padding(
+              //     padding: EdgeInsets.only(right: 10),
+              //     child: Icon(Icons.search),
+              //   ),
+              // ),
+              // Constants.height30,
+              _buildFYPlabel(),
+              const ForYouPage()
+            ],
+          );
+        }
+      },
     ));
   }
 
