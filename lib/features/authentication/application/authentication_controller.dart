@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:livestream/configs/api_base_service.dart';
 import 'package:livestream/configs/api_end_points.dart';
-import 'package:livestream/services/auth/firebase_auth_fasade.dart';
+import 'package:livestream/core/constants.dart';
+import 'package:livestream/features/authentication/model/login_repsone_model.dart';
+import 'package:livestream/services/authentication/firebase/firebase_auth_fasade.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthenticationController extends ChangeNotifier {
   TextEditingController emailController = TextEditingController();
@@ -13,9 +16,22 @@ class AuthenticationController extends ChangeNotifier {
 
   FirebaseAuthService firebaseAuthService = FirebaseAuthService();
   BaseApiService baseApiService = BaseApiService();
-  bool isSigned = false;
 
-  Future<bool> login(
+  bool isSigned = false;
+  bool isFetching = false;
+
+  showLoadingIndicator() {
+    isFetching = true;
+    notifyListeners();
+  }
+
+  hideLoadingIndicator() {
+    isFetching = false;
+    notifyListeners();
+  }
+
+  Future<bool> loginWIthEmailAndPassword(
+    String username,
     String email,
     String password,
   ) async {
@@ -31,11 +47,21 @@ class AuthenticationController extends ChangeNotifier {
         if (userCredential != null) {
           final body = {
             "email": email,
+            "username": username,
             "password": password,
           };
           final response =
               await baseApiService.postApiCall(ApiEndPoints.login, body: body);
           if (response != null) {
+            log('response ; ${response.data}');
+            final pref = await SharedPreferences.getInstance();
+
+            await pref.setString(
+              PreferenceConstants.userID,
+              LoginResponseModel.fromJson(response.data).user!.sId!,
+            );
+
+            notifyListeners();
             return true;
           }
         }
@@ -46,7 +72,7 @@ class AuthenticationController extends ChangeNotifier {
     return false;
   }
 
-  Future<bool> register(
+  Future<bool> registerWithEmailAndPassword(
     String username,
     String fullName,
     String email,
@@ -74,6 +100,12 @@ class AuthenticationController extends ChangeNotifier {
           final response = await baseApiService
               .postApiCall(ApiEndPoints.register, body: body);
           if (response != null) {
+            final pref = await SharedPreferences.getInstance();
+
+            await pref.setString(
+              PreferenceConstants.userID,
+              LoginResponseModel.fromJson(response.data).user!.sId!,
+            );
             return true;
           }
         }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:livestream/bottom_nav.dart';
+import 'package:livestream/rootscreen.dart';
 import 'package:livestream/core/colors.dart';
 import 'package:livestream/core/constants.dart';
 import 'package:livestream/features/authentication/application/authentication_controller.dart';
@@ -85,7 +85,7 @@ class RegistrationScreen extends StatelessWidget {
                 final email = value.emailController.text;
                 final password = value.passwordController.text;
                 bool authenticated =
-                    await value.register(username, fullName, email, password);
+                    await value.registerWithEmailAndPassword(username, fullName, email, password);
 
                 if (authenticated) {
                   if (context.mounted) {

@@ -10,7 +10,7 @@ import 'package:livestream/widgets/textfield.dart';
 import 'package:livestream/widgets/splash_logo.dart';
 import 'package:provider/provider.dart';
 
-import '../../../bottom_nav.dart';
+import '../../../rootscreen.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -19,6 +19,7 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final authController =
         Provider.of<AuthenticationController>(context, listen: false);
+
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -29,6 +30,10 @@ class LoginScreen extends StatelessWidget {
             textColor: Colors.black,
           ),
           Constants.height50,
+          AppTextField(
+            controller: authController.usernameController,
+            hint: 'username',
+          ),
           Constants.height50,
           AppTextField(
             controller: authController.emailController,
@@ -74,14 +79,18 @@ class LoginScreen extends StatelessWidget {
                 ),
               ),
               onTap: () async {
+                final username = value.usernameController.text;
                 final email = value.emailController.text;
                 final password = value.passwordController.text;
-                if (email.isEmpty) {
+                if (username.isEmpty) {
+                  Fluttertoast.showToast(msg: "Enter username");
+                } else if (email.isEmpty) {
                   Fluttertoast.showToast(msg: "Enter Email");
                 } else if (password.isEmpty) {
                   Fluttertoast.showToast(msg: "Enter password");
                 } else {
-                  bool authenticated = await value.login(email, password);
+                  bool authenticated = await value.loginWIthEmailAndPassword(
+                      username, email, password);
 
                   if (authenticated) {
                     if (context.mounted) {

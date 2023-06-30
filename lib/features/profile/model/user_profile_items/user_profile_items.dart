@@ -1,6 +1,6 @@
 final userProfileItems = [
-  'peter_parker098',
-  'peterparker@gmail.com',
+  'username',
+  'email',
   'Change Password',
   'Log out',
 ];

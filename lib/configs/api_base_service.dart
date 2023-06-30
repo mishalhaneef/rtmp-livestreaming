@@ -35,12 +35,13 @@ class BaseApiService {
   }
 
   Future<Response?> getApiCall(
-    String firebaseToken,
     String apiUrl, {
     dynamic body,
     String? contentType,
     // Map<String, dynamic>? queryParameters,
   }) async {
+    log('api : ${ApiEndPoints.baseUrl + apiUrl}');
+
     try {
       Response response = await dio.get(ApiEndPoints.baseUrl + apiUrl);
       logApiResponse(response);

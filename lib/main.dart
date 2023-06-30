@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:livestream/controller/bottom_nav_controller.dart';
+import 'package:livestream/controller/user_base_controller.dart';
 import 'package:livestream/core/enums.dart';
 import 'package:livestream/features/authentication/application/authentication_controller.dart';
 import 'package:livestream/features/chats/application/chat_controller.dart';
@@ -46,6 +47,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) => UserSearchController(),
         ),
+        ChangeNotifierProvider(
+          create: (context) => UserController(),
+        ),
       ],
       child: MaterialApp(
           debugShowCheckedModeBanner: false,
@@ -58,7 +62,8 @@ class MyApp extends StatelessWidget {
             builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const SplashScreen(authStaus: AuthState.waiting);
-              } else {
+              }
+               else {
                 if (snapshot.hasData) {
                   return const SplashScreen(authStaus: AuthState.authenticated);
                 } else {

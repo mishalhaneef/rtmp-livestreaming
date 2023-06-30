@@ -47,6 +47,9 @@ PODS:
   - image_picker_ios (0.0.1):
     - Flutter
   - PromisesObjC (2.2.0)
+  - shared_preferences_foundation (0.0.1):
+    - Flutter
+    - FlutterMacOS
   - Toast (4.0.0)
 
 DEPENDENCIES:
@@ -55,6 +58,7 @@ DEPENDENCIES:
   - Flutter (from `Flutter`)
   - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
   - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
+  - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
 
 SPEC REPOS:
   trunk:
@@ -79,6 +83,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/fluttertoast/ios"
   image_picker_ios:
     :path: ".symlinks/plugins/image_picker_ios/ios"
+  shared_preferences_foundation:
+    :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
 
 SPEC CHECKSUMS:
   Firebase: facd334e557a979bd03a0b58d90fd56b52b8aba0
@@ -94,6 +100,7 @@ SPEC CHECKSUMS:
   GTMSessionFetcher: e8647203b65cee28c5f73d0f473d096653945e72
   image_picker_ios: 4a8aadfbb6dc30ad5141a2ce3832af9214a705b5
   PromisesObjC: 09985d6d70fbe7878040aa746d78236e6946d2ef
+  shared_preferences_foundation: e2dae3258e06f44cc55f49d42024fd8dd03c590c
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
 
 PODFILE CHECKSUM: ef19549a9bc3046e7bb7d2fab4d021637c0c58a3

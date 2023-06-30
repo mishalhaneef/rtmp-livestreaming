@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:livestream/services/auth/auth_service.dart';
-import 'package:livestream/services/auth/failure/auth_failure.dart';
+import 'package:livestream/services/authentication/firebase/auth_service.dart';
+import 'package:livestream/services/authentication/firebase/failure/auth_failure.dart';
 
 class FirebaseAuthService implements AuthenticationService {
   final failure = AuthFailure();

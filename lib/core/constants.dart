@@ -8,3 +8,7 @@ class Constants {
   static const height40 = SizedBox(height: 40);
   static const height50 = SizedBox(height: 50);
 }
+
+class PreferenceConstants {
+  static String userID = 'userID';
+}

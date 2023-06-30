@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class WelcomeText extends StatelessWidget {
-  const WelcomeText({
-    super.key,
-  });
+  const WelcomeText({super.key, required this.userFullName});
+
+  final String? userFullName;
 
   @override
   Widget build(BuildContext context) {
@@ -11,14 +11,14 @@ class WelcomeText extends StatelessWidget {
       padding: const EdgeInsets.only(left: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
-          Text(
+        children: [
+          const Text(
             'Hello,',
             style: TextStyle(fontSize: 24),
           ),
           Text(
-            'Peter Parker',
-            style: TextStyle(
+            userFullName ?? '',
+            style: const TextStyle(
               fontSize: 32,
               fontWeight: FontWeight.bold,
             ),
