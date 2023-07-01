@@ -1,29 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:livestream/core/base_user_model.dart';
 import 'package:livestream/core/constants.dart';
 
 class UserDetail extends StatelessWidget {
   const UserDetail({
     super.key,
+    required this.user,
   });
+
+  final UserData user;
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
+    return Center(
       child: Column(
         children: [
           CircleAvatar(
             radius: 55,
             backgroundColor: Colors.white,
-            backgroundImage: NetworkImage(
-                'https://i.pinimg.com/736x/4a/7c/e2/4a7ce2c18eaefdcd7786cabdb724a2ba.jpg'),
+            backgroundImage: NetworkImage(user.image!),
           ),
           Constants.height20,
           Text(
-            'Peter Parker',
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
+            user.name ?? '',
+            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
           ),
           Constants.height5,
-          Row(
+          const Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(

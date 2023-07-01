@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:livestream/core/base_user_model.dart';
 import 'package:livestream/core/constants.dart';
 import 'package:livestream/features/chats/application/chat_controller.dart';
 import 'package:livestream/features/chats/presentation/widgets/message_thread.dart';
@@ -6,7 +7,9 @@ import 'package:livestream/widgets/textfield.dart';
 import 'package:provider/provider.dart';
 
 class ChatRoom extends StatelessWidget {
-  const ChatRoom({super.key});
+  const ChatRoom({super.key, this.userData});
+
+  final UserData? userData;
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +19,7 @@ class ChatRoom extends StatelessWidget {
         iconTheme: const IconThemeData(color: Colors.black),
         backgroundColor: Colors.grey[50],
         elevation: 0,
-        title: _buildChatRoomHeader(context),
+        title: _buildChatRoomHeader(context, userData!),
       ),
       body: Column(
         children: [
@@ -77,26 +80,22 @@ class ChatRoom extends StatelessWidget {
     );
   }
 
-  Row _buildChatRoomHeader(BuildContext context) {
-    return const Row(
+  Row _buildChatRoomHeader(BuildContext context, UserData user) {
+    return Row(
       children: [
-        CircleAvatar(
-            maxRadius: 25,
-            backgroundImage: NetworkImage(
-              'https://www.mnp.ca/-/media/foundation/integrations/personnel/2020/12/16/13/57/personnel-image-4483.jpg?h=800&w=600&hash=9D5E5FCBEE00EB562DCD8AC8FDA8433D',
-            )),
-        SizedBox(width: 10),
+        CircleAvatar(maxRadius: 25, backgroundImage: NetworkImage(user.image!)),
+        const SizedBox(width: 10),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Dan Hosten',
-              style: TextStyle(color: Colors.black),
+              user.name ?? '',
+              style: const TextStyle(color: Colors.black),
             ),
-            SizedBox(height: 3),
+            const SizedBox(height: 3),
             Text(
-              'Online',
-              style: TextStyle(
+              user.username ?? '',
+              style: const TextStyle(
                 color: Colors.black,
                 fontSize: 12,
               ),

@@ -80,7 +80,10 @@ class SearchScreen extends StatelessWidget {
                       children: [
                         GestureDetector(
                           onTap: () => NavigationHandler.navigateTo(
-                              context, const ChatRoom()),
+                              context,
+                              ChatRoom(
+                                userData: value.searchResult.users![index],
+                              )),
                           child: const Icon(
                             CupertinoIcons.chat_bubble_fill,
                             color: Palatte.themeGreenColor,

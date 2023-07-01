@@ -20,6 +20,7 @@ class LiveSetupScreen extends StatelessWidget {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       await UserPreferenceManager.getUserDetails(userController);
     });
+    
     return Scaffold(
         body: Consumer<UserController>(
       builder: (context, value, child) => Column(
@@ -86,7 +87,7 @@ class LiveSetupScreen extends StatelessWidget {
     ));
   }
 
-  Padding _buildUserDetails(UserData? user) {
+  Widget _buildUserDetails(UserData? user) {
     return Padding(
       padding: const EdgeInsets.only(left: 20),
       child: Row(
@@ -102,7 +103,8 @@ class LiveSetupScreen extends StatelessWidget {
             children: [
               Text(
                 user.name ?? '',
-                style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
+                style:
+                    const TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
               ),
               Constants.height5,
               Row(

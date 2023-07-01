@@ -3,13 +3,13 @@ class StreamCoverModel {
   String streamerProfilePicture;
   String viewCount;
   String thumbnail;
-  String title;
+  String username;
   StreamCoverModel({
     required this.streamerName,
     required this.streamerProfilePicture,
     required this.viewCount,
     required this.thumbnail,
-    required this.title,
+    required this.username,
   });
 }
 
@@ -21,7 +21,7 @@ List<StreamCoverModel> streamersList = [
     viewCount: '290',
     thumbnail:
         'https://socialpubli.com/blog/wp-content/uploads/2021/07/professional-smiling-esport-gamer-girl-live-stream-FEF5K7P-scaled.jpg',
-    title: 'Hi Guys :))',
+    username: 'ashleypan',
   ),
   StreamCoverModel(
     streamerName: 'Pokimane',
@@ -29,7 +29,7 @@ List<StreamCoverModel> streamersList = [
         'https://images.unsplash.com/photo-1618641986557-1ecd230959aa?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NXx8cHJvZmlsZXxlbnwwfHwwfHw%3D&w=1000&q=80',
     viewCount: '420',
     thumbnail: 'https://images.wsj.net/im-428758/square',
-    title: 'Chat With me :))',
+    username: 'pokimane',
   ),
   StreamCoverModel(
     streamerName: 'Kun Ageuro',
@@ -38,7 +38,7 @@ List<StreamCoverModel> streamersList = [
     viewCount: '945',
     thumbnail:
         'https://neoreach.com/wp-content/uploads/2021/06/Top-10-Live-Streamers-from-TikTok-to-Gaming.png',
-    title: '7 PM Live :))',
+    username: 'kun98283',
   ),
   StreamCoverModel(
     streamerName: 'Abraham',
@@ -47,6 +47,6 @@ List<StreamCoverModel> streamersList = [
     viewCount: '566',
     thumbnail:
         'https://cdn.shopify.com/s/files/1/0095/4332/files/Screen_Shot_2018-02-21_at_10.43.11_AM_1024x1024.png?v=1519258577',
-    title: 'Game Talks',
+    username: 'abraham_kisto',
   ),
 ];

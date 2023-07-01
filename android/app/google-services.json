@@ -7,7 +7,7 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:93361298385:android:240d778884a8a9e8da5ef0",
+        "mobilesdk_app_id": "1:93361298385:android:5fd8af90e6231281da5ef0",
         "android_client_info": {
           "package_name": "com.livestream.livestream"
         }
@@ -29,6 +29,13 @@
             {
               "client_id": "93361298385-s0usacnnjt3h6nr7iq69hgk0vn8eornc.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "93361298385-q4udpd8mbcofp53iq1sme0trma8osqiu.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.livestream.livestream"
+              }
             }
           ]
         }

@@ -30,10 +30,10 @@ class LoginScreen extends StatelessWidget {
             textColor: Colors.black,
           ),
           Constants.height50,
-          AppTextField(
-            controller: authController.usernameController,
-            hint: 'username',
-          ),
+          // AppTextField(
+          //   controller: authController.usernameController,
+          //   hint: 'username',
+          // ),
           Constants.height50,
           AppTextField(
             controller: authController.emailController,
@@ -79,18 +79,15 @@ class LoginScreen extends StatelessWidget {
                 ),
               ),
               onTap: () async {
-                final username = value.usernameController.text;
                 final email = value.emailController.text;
                 final password = value.passwordController.text;
-                if (username.isEmpty) {
-                  Fluttertoast.showToast(msg: "Enter username");
-                } else if (email.isEmpty) {
+                if (email.isEmpty) {
                   Fluttertoast.showToast(msg: "Enter Email");
                 } else if (password.isEmpty) {
                   Fluttertoast.showToast(msg: "Enter password");
                 } else {
-                  bool authenticated = await value.loginWIthEmailAndPassword(
-                      username, email, password);
+                  bool authenticated =
+                      await value.loginWIthEmailAndPassword(email, password);
 
                   if (authenticated) {
                     if (context.mounted) {

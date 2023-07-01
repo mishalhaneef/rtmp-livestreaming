@@ -89,7 +89,7 @@ class ForYouPage extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.all(12),
                             child: Text(
-                              streamer.title,
+                              streamer.username,
                               style: const TextStyle(
                                 color: Colors.white,
                               ),

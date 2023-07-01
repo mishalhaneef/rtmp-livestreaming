@@ -31,7 +31,6 @@ class AuthenticationController extends ChangeNotifier {
   }
 
   Future<bool> loginWIthEmailAndPassword(
-    String username,
     String email,
     String password,
   ) async {
@@ -46,8 +45,7 @@ class AuthenticationController extends ChangeNotifier {
 
         if (userCredential != null) {
           final body = {
-            "email": email,
-            "username": username,
+            "username": email,
             "password": password,
           };
           final response =
@@ -79,35 +77,28 @@ class AuthenticationController extends ChangeNotifier {
     String password,
   ) async {
     try {
-      if (username.isEmpty) {
-        Fluttertoast.showToast(msg: 'Enter username');
-      } else if (password.isEmpty) {
-        Fluttertoast.showToast(msg: 'Enter Password');
-      } else if (fullName.isEmpty) {
-        Fluttertoast.showToast(msg: 'Enter Full Name');
-      } else if (email.isEmpty) {
-        Fluttertoast.showToast(msg: 'Enter Email');
-      } else {
-        final userCredential = await firebaseAuthService
-            .registerWithEmailAndPassword(email, password);
-        if (userCredential != null) {
-          final body = {
-            "username": username,
-            "name": fullName,
-            "email": email,
-            "password": password,
-          };
-          final response = await baseApiService
-              .postApiCall(ApiEndPoints.register, body: body);
-          if (response != null) {
-            final pref = await SharedPreferences.getInstance();
+      final userCredential = await firebaseAuthService
+          .registerWithEmailAndPassword(email, password);
+      if (userCredential != null) {
+        final body = {
+          "username": username,
+          "email": email,
+          "name": fullName,
+          "password": password,
+        };
+        final response =
+            await baseApiService.postApiCall(ApiEndPoints.register, body: body);
+        if (response != null) {
+          final pref = await SharedPreferences.getInstance();
+           final loginResponseModel = LoginResponseModel.fromJson(response.data);
 
-            await pref.setString(
-              PreferenceConstants.userID,
-              LoginResponseModel.fromJson(response.data).user!.sId!,
-            );
-            return true;
-          }
+          Fluttertoast.showToast(msg: loginResponseModel.msg ?? "");
+
+          await pref.setString(
+            PreferenceConstants.userID,
+            loginResponseModel.user!.sId!,
+          );
+          return true;
         }
       }
     } catch (e) {

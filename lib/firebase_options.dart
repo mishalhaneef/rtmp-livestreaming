@@ -51,7 +51,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyD161wRfbs4AdFaVETg0RTXRGqV-A0lev8',
-    appId: '1:93361298385:android:240d778884a8a9e8da5ef0',
+    appId: '1:93361298385:android:5fd8af90e6231281da5ef0',
     messagingSenderId: '93361298385',
     projectId: 'vueflow-91fe2',
     storageBucket: 'vueflow-91fe2.appspot.com',
@@ -59,7 +59,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyCNx7j1jJ0T4Sj2eQSHRot9_PZVS7aKZtA',
-    appId: '1:93361298385:ios:41ccf24d20fb3baeda5ef0',
+    appId: '1:93361298385:ios:12dffe2a5e07df51da5ef0',
     messagingSenderId: '93361298385',
     projectId: 'vueflow-91fe2',
     storageBucket: 'vueflow-91fe2.appspot.com',

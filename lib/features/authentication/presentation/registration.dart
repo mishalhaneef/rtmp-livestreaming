@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:livestream/rootscreen.dart';
 import 'package:livestream/core/colors.dart';
 import 'package:livestream/core/constants.dart';
@@ -84,12 +85,24 @@ class RegistrationScreen extends StatelessWidget {
                 final fullName = value.nameController.text;
                 final email = value.emailController.text;
                 final password = value.passwordController.text;
-                bool authenticated =
-                    await value.registerWithEmailAndPassword(username, fullName, email, password);
-
-                if (authenticated) {
-                  if (context.mounted) {
-                    NavigationHandler.navigateOff(context, const RootScreen());
+                if (password.isEmpty) {
+                  Fluttertoast.showToast(msg: 'Enter Password');
+                } else if (fullName.isEmpty) {
+                  Fluttertoast.showToast(msg: 'Enter Full Name');
+                } else if (email.isEmpty) {
+                  Fluttertoast.showToast(msg: 'Enter Email');
+                } else {
+                  bool authenticated = await value.registerWithEmailAndPassword(
+                    username,
+                    fullName,
+                    email,
+                    password,
+                  );
+                  if (authenticated) {
+                    if (context.mounted) {
+                      NavigationHandler.navigateOff(
+                          context, const RootScreen());
+                    }
                   }
                 }
               },
