@@ -20,21 +20,13 @@ class AuthenticationController extends ChangeNotifier {
   bool isSigned = false;
   bool isFetching = false;
 
-  showLoadingIndicator() {
-    isFetching = true;
-    notifyListeners();
-  }
-
-  hideLoadingIndicator() {
-    isFetching = false;
-    notifyListeners();
-  }
-
   Future<bool> loginWIthEmailAndPassword(
     String email,
     String password,
   ) async {
     try {
+      isFetching = true;
+      notifyListeners();
       if (email.isEmpty) {
         Fluttertoast.showToast(msg: 'Enter Email');
       } else if (password.isEmpty) {
@@ -66,6 +58,9 @@ class AuthenticationController extends ChangeNotifier {
       }
     } catch (e) {
       log(e.toString());
+    } finally {
+      isFetching = false;
+      notifyListeners();
     }
     return false;
   }
@@ -76,6 +71,8 @@ class AuthenticationController extends ChangeNotifier {
     String email,
     String password,
   ) async {
+    isFetching = true;
+    notifyListeners();
     try {
       final userCredential = await firebaseAuthService
           .registerWithEmailAndPassword(email, password);
@@ -90,7 +87,7 @@ class AuthenticationController extends ChangeNotifier {
             await baseApiService.postApiCall(ApiEndPoints.register, body: body);
         if (response != null) {
           final pref = await SharedPreferences.getInstance();
-           final loginResponseModel = LoginResponseModel.fromJson(response.data);
+          final loginResponseModel = LoginResponseModel.fromJson(response.data);
 
           Fluttertoast.showToast(msg: loginResponseModel.msg ?? "");
 
@@ -103,6 +100,9 @@ class AuthenticationController extends ChangeNotifier {
       }
     } catch (e) {
       log(e.toString());
+    } finally {
+      isFetching = false;
+      notifyListeners();
     }
     return false;
   }

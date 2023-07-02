@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:livestream/core/colors.dart';
 import 'package:livestream/core/constants.dart';
+import 'package:livestream/core/indicator.dart';
 import 'package:livestream/features/authentication/application/authentication_controller.dart';
 import 'package:livestream/features/authentication/presentation/registration.dart';
 import 'package:livestream/routes/app_routes.dart';
@@ -70,6 +71,8 @@ class LoginScreen extends StatelessWidget {
           const Spacer(),
           Consumer<AuthenticationController>(
             builder: (context, value, child) => AppButton(
+              hintWidget:
+                  value.isFetching ? progressIndicator(Colors.white) : null,
               hint: const Text(
                 'LOGIN',
                 style: TextStyle(
@@ -78,26 +81,28 @@ class LoginScreen extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              onTap: () async {
-                final email = value.emailController.text;
-                final password = value.passwordController.text;
-                if (email.isEmpty) {
-                  Fluttertoast.showToast(msg: "Enter Email");
-                } else if (password.isEmpty) {
-                  Fluttertoast.showToast(msg: "Enter password");
-                } else {
-                  bool authenticated =
-                      await value.loginWIthEmailAndPassword(email, password);
+              onTap: value.isFetching
+                  ? null
+                  : () async {
+                      final email = value.emailController.text;
+                      final password = value.passwordController.text;
+                      if (email.isEmpty) {
+                        Fluttertoast.showToast(msg: "Enter Email");
+                      } else if (password.isEmpty) {
+                        Fluttertoast.showToast(msg: "Enter password");
+                      } else {
+                        bool authenticated = await value
+                            .loginWIthEmailAndPassword(email, password);
 
-                  if (authenticated) {
-                    if (context.mounted) {
-                      NavigationHandler.navigateOff(
-                          context, const RootScreen());
-                    }
-                  }
-                }
-              },
-              color: Palatte.themeGreenColor,
+                        if (authenticated) {
+                          if (context.mounted) {
+                            NavigationHandler.navigateOff(
+                                context, const RootScreen());
+                          }
+                        }
+                      }
+                    },
+              color: value.isFetching ? Colors.grey : Palatte.themeGreenColor,
             ),
           ),
           Constants.height50,

@@ -11,6 +11,8 @@ import 'package:livestream/widgets/textfield.dart';
 import 'package:livestream/widgets/splash_logo.dart';
 import 'package:provider/provider.dart';
 
+import '../../../core/indicator.dart';
+
 class RegistrationScreen extends StatelessWidget {
   const RegistrationScreen({super.key});
 
@@ -72,6 +74,8 @@ class RegistrationScreen extends StatelessWidget {
           const Spacer(),
           Consumer<AuthenticationController>(
             builder: (context, value, child) => AppButton(
+              hintWidget:
+                  value.isFetching ? progressIndicator(Colors.white) : null,
               hint: const Text(
                 'Register',
                 style: TextStyle(
@@ -80,33 +84,36 @@ class RegistrationScreen extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              onTap: () async {
-                final username = value.usernameController.text;
-                final fullName = value.nameController.text;
-                final email = value.emailController.text;
-                final password = value.passwordController.text;
-                if (password.isEmpty) {
-                  Fluttertoast.showToast(msg: 'Enter Password');
-                } else if (fullName.isEmpty) {
-                  Fluttertoast.showToast(msg: 'Enter Full Name');
-                } else if (email.isEmpty) {
-                  Fluttertoast.showToast(msg: 'Enter Email');
-                } else {
-                  bool authenticated = await value.registerWithEmailAndPassword(
-                    username,
-                    fullName,
-                    email,
-                    password,
-                  );
-                  if (authenticated) {
-                    if (context.mounted) {
-                      NavigationHandler.navigateOff(
-                          context, const RootScreen());
-                    }
-                  }
-                }
-              },
-              color: Palatte.themeGreenColor,
+              onTap: value.isFetching
+                  ? null
+                  : () async {
+                      final username = value.usernameController.text;
+                      final fullName = value.nameController.text;
+                      final email = value.emailController.text;
+                      final password = value.passwordController.text;
+                      if (password.isEmpty) {
+                        Fluttertoast.showToast(msg: 'Enter Password');
+                      } else if (fullName.isEmpty) {
+                        Fluttertoast.showToast(msg: 'Enter Full Name');
+                      } else if (email.isEmpty) {
+                        Fluttertoast.showToast(msg: 'Enter Email');
+                      } else {
+                        bool authenticated =
+                            await value.registerWithEmailAndPassword(
+                          username,
+                          fullName,
+                          email,
+                          password,
+                        );
+                        if (authenticated) {
+                          if (context.mounted) {
+                            NavigationHandler.navigateOff(
+                                context, const RootScreen());
+                          }
+                        }
+                      }
+                    },
+              color: value.isFetching ? Colors.grey : Palatte.themeGreenColor,
             ),
           ),
           Constants.height50,
