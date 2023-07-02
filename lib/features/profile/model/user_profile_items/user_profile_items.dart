@@ -1,6 +1,11 @@
 final userProfileItems = [
-  'username',
-  'email',
-  'Change Password',
+  'Edit Profile',
+  'Privacy Policy',
   'Log out',
+];
+
+final editUserProfileItems = [
+  'username',
+  'fullname',
+  'email',
 ];

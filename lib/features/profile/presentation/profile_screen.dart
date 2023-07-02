@@ -1,10 +1,16 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:livestream/controller/user_base_controller.dart';
 import 'package:livestream/core/constants.dart';
+import 'package:livestream/core/indicator.dart';
 import 'package:livestream/core/user_preference_manager.dart';
+import 'package:livestream/features/authentication/presentation/login.dart';
 import 'package:livestream/features/profile/model/user_profile_items/user_profile_items.dart';
+import 'package:livestream/features/profile/presentation/widget/edit_screen.dart';
+import 'package:livestream/features/profile/presentation/widget/privacy_policy.dart';
 import 'package:livestream/features/profile/presentation/widget/user_details.dart';
+import 'package:livestream/routes/app_routes.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -31,7 +37,10 @@ class ProfileScreen extends StatelessWidget {
               ),
             ),
             Constants.height20,
-            UserDetail(user: value.userModel.user!),
+            if (value.userModel.user == null)
+              progressIndicator(Colors.black)
+            else
+              UserDetail(user: value.userModel.user!),
             Constants.height50,
             ListView.separated(
               physics: const BouncingScrollPhysics(),
@@ -74,15 +83,47 @@ class ProfileScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Consumer<UserController>(
-                              builder: (context, value, child) => Text(
-                                settings == 'username'
-                                    ? value.userModel.user!.username ?? ''
-                                    : settings == 'email'
-                                        ? value.userModel.user!.email ?? ''
-                                        : settings,
-                                style: const TextStyle(fontSize: 16),
-                              ),
-                            ),
+                                builder: (context, value, child) {
+                              // if (value.userModel.user == null) {
+                              //   return progressIndicator(Colors.black);
+                              // } else {
+                              return GestureDetector(
+                                onTap: () async {
+                                  if (settings == 'Edit Profile') {
+                                    if (value.userModel.user == null) {
+                                      Fluttertoast.showToast(
+                                          msg: "Internet Problem, Try again");
+                                    } else {
+                                      NavigationHandler.navigateTo(
+                                          context,
+                                          EditScreen(
+                                              user: value.userModel.user!));
+                                    }
+                                  }
+                                  if (settings == 'Privacy Policy') {
+                                    NavigationHandler.navigateTo(
+                                        context, PrivacyPolicyScreen());
+                                  }
+                                  if (settings == 'Log out') {
+                                    await FirebaseAuth.instance.signOut();
+                                    final pref =
+                                        await SharedPreferences.getInstance();
+                                    await pref.clear();
+
+                                    if (context.mounted) {
+                                      NavigationHandler.navigateTo(
+                                          context, const LoginScreen());
+                                    }
+                                  }
+                                },
+                                child: Text(
+                                  settings,
+                                  style: const TextStyle(fontSize: 16),
+                                ),
+                              );
+                            }
+                                // },
+                                ),
                             Icon(
                               settings == 'Log out'
                                   ? Icons.logout

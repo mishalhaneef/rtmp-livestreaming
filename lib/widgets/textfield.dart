@@ -1,18 +1,19 @@
-
 import 'package:flutter/material.dart';
 import 'package:livestream/features/chats/application/chat_controller.dart';
 import 'package:provider/provider.dart';
 
 class AppTextField extends StatelessWidget {
-  const AppTextField(
-      {super.key,
-      required this.hint,
-      this.suffixIcon,
-      this.height = 55,
-      this.width = 324,
-      this.controller,
-      this.chat = false,
-      this.onChanged});
+  const AppTextField({
+    super.key,
+    required this.hint,
+    this.suffixIcon,
+    this.height = 55,
+    this.width = 324,
+    this.controller,
+    this.chat = false,
+    this.onChanged,
+    this.enabled = true,
+  });
 
   final String hint;
   final Widget? suffixIcon;
@@ -21,6 +22,7 @@ class AppTextField extends StatelessWidget {
   final TextEditingController? controller;
   final bool chat;
   final Function(String)? onChanged;
+  final bool enabled;
 
   @override
   Widget build(BuildContext context) {
@@ -51,6 +53,7 @@ class AppTextField extends StatelessWidget {
             children: [
               Expanded(
                 child: TextField(
+                  enabled: enabled,
                   controller: controller,
                   cursorColor: Colors.black,
                   decoration: InputDecoration(

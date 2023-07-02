@@ -38,6 +38,7 @@ dependencies:
   fluttertoast: ^8.2.2
   image_picker: ^0.8.9
   intl: ^0.18.1
+  permission_handler: ^10.4.1
   provider: ^6.0.5
   shared_preferences: ^2.1.2
 

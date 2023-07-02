@@ -3,11 +3,9 @@ import 'package:livestream/core/base_user_model.dart';
 import 'package:livestream/core/constants.dart';
 
 class UserDetail extends StatelessWidget {
-  const UserDetail({
-    super.key,
-    required this.user,
-  });
+  const UserDetail({super.key, required this.user, this.isEdit = false});
 
+  final bool isEdit;
   final UserData user;
 
   @override
@@ -15,10 +13,25 @@ class UserDetail extends StatelessWidget {
     return Center(
       child: Column(
         children: [
-          CircleAvatar(
-            radius: 55,
-            backgroundColor: Colors.white,
-            backgroundImage: NetworkImage(user.image!),
+          Stack(
+            children: [
+              CircleAvatar(
+                radius: 55,
+                backgroundColor: Colors.white,
+                backgroundImage: NetworkImage(user.image!),
+              ),
+              isEdit
+                  ? const Positioned(
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      child: CircleAvatar(
+                        backgroundColor: Colors.white,
+                        child: Icon(Icons.camera_alt),
+                      ),
+                    )
+                  : const SizedBox()
+            ],
           ),
           Constants.height20,
           Text(
@@ -26,15 +39,15 @@ class UserDetail extends StatelessWidget {
             style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
           ),
           Constants.height5,
-          const Row(
+          Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Streamer Account',
-                style: TextStyle(fontSize: 16),
+                user.username ?? '',
+                style: const TextStyle(fontSize: 16),
               ),
-              SizedBox(width: 5),
-              Icon(
+              const SizedBox(width: 5),
+              const Icon(
                 Icons.verified,
                 color: Colors.blue,
                 size: 15,

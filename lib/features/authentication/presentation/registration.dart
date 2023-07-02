@@ -21,8 +21,7 @@ class RegistrationScreen extends StatelessWidget {
     final authController =
         Provider.of<AuthenticationController>(context, listen: false);
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+      body: ListView(
         children: [
           Constants.height50,
           Constants.height50,
@@ -71,49 +70,52 @@ class RegistrationScreen extends StatelessWidget {
               ],
             ),
           ),
-          const Spacer(),
+          Constants.height40,
           Consumer<AuthenticationController>(
-            builder: (context, value, child) => AppButton(
-              hintWidget:
-                  value.isFetching ? progressIndicator(Colors.white) : null,
-              hint: const Text(
-                'Register',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+            builder: (context, value, child) => Padding(
+              padding: const EdgeInsets.only(left: 40, right: 40),
+              child: AppButton(
+                hintWidget:
+                    value.isFetching ? progressIndicator(Colors.white) : null,
+                hint: const Text(
+                  'Register',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              onTap: value.isFetching
-                  ? null
-                  : () async {
-                      final username = value.usernameController.text;
-                      final fullName = value.nameController.text;
-                      final email = value.emailController.text;
-                      final password = value.passwordController.text;
-                      if (password.isEmpty) {
-                        Fluttertoast.showToast(msg: 'Enter Password');
-                      } else if (fullName.isEmpty) {
-                        Fluttertoast.showToast(msg: 'Enter Full Name');
-                      } else if (email.isEmpty) {
-                        Fluttertoast.showToast(msg: 'Enter Email');
-                      } else {
-                        bool authenticated =
-                            await value.registerWithEmailAndPassword(
-                          username,
-                          fullName,
-                          email,
-                          password,
-                        );
-                        if (authenticated) {
-                          if (context.mounted) {
-                            NavigationHandler.navigateOff(
-                                context, const RootScreen());
+                onTap: value.isFetching
+                    ? null
+                    : () async {
+                        final username = value.usernameController.text;
+                        final fullName = value.nameController.text;
+                        final email = value.emailController.text;
+                        final password = value.passwordController.text;
+                        if (password.isEmpty) {
+                          Fluttertoast.showToast(msg: 'Enter Password');
+                        } else if (fullName.isEmpty) {
+                          Fluttertoast.showToast(msg: 'Enter Full Name');
+                        } else if (email.isEmpty) {
+                          Fluttertoast.showToast(msg: 'Enter Email');
+                        } else {
+                          bool authenticated =
+                              await value.registerWithEmailAndPassword(
+                            username,
+                            fullName,
+                            email,
+                            password,
+                          );
+                          if (authenticated) {
+                            if (context.mounted) {
+                              NavigationHandler.navigateOff(
+                                  context, const RootScreen());
+                            }
                           }
                         }
-                      }
-                    },
-              color: value.isFetching ? Colors.grey : Palatte.themeGreenColor,
+                      },
+                color: value.isFetching ? Colors.grey : Palatte.themeGreenColor,
+              ),
             ),
           ),
           Constants.height50,

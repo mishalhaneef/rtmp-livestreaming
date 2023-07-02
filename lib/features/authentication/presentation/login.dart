@@ -22,8 +22,8 @@ class LoginScreen extends StatelessWidget {
         Provider.of<AuthenticationController>(context, listen: false);
 
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+      body: ListView(
+        // mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Constants.height50,
           Constants.height50,
@@ -68,41 +68,44 @@ class LoginScreen extends StatelessWidget {
               ],
             ),
           ),
-          const Spacer(),
+          Constants.height50,
           Consumer<AuthenticationController>(
-            builder: (context, value, child) => AppButton(
-              hintWidget:
-                  value.isFetching ? progressIndicator(Colors.white) : null,
-              hint: const Text(
-                'LOGIN',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+            builder: (context, value, child) => Padding(
+              padding: const EdgeInsets.only(left: 40, right: 40),
+              child: AppButton(
+                hintWidget:
+                    value.isFetching ? progressIndicator(Colors.white) : null,
+                hint: const Text(
+                  'LOGIN',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              onTap: value.isFetching
-                  ? null
-                  : () async {
-                      final email = value.emailController.text;
-                      final password = value.passwordController.text;
-                      if (email.isEmpty) {
-                        Fluttertoast.showToast(msg: "Enter Email");
-                      } else if (password.isEmpty) {
-                        Fluttertoast.showToast(msg: "Enter password");
-                      } else {
-                        bool authenticated = await value
-                            .loginWIthEmailAndPassword(email, password);
-
-                        if (authenticated) {
-                          if (context.mounted) {
-                            NavigationHandler.navigateOff(
-                                context, const RootScreen());
+                onTap: value.isFetching
+                    ? null
+                    : () async {
+                        final email = value.emailController.text;
+                        final password = value.passwordController.text;
+                        if (email.isEmpty) {
+                          Fluttertoast.showToast(msg: "Enter Email");
+                        } else if (password.isEmpty) {
+                          Fluttertoast.showToast(msg: "Enter password");
+                        } else {
+                          bool authenticated = await value
+                              .loginWIthEmailAndPassword(email, password);
+            
+                          if (authenticated) {
+                            if (context.mounted) {
+                              NavigationHandler.navigateOff(
+                                  context, const RootScreen());
+                            }
                           }
                         }
-                      }
-                    },
-              color: value.isFetching ? Colors.grey : Palatte.themeGreenColor,
+                      },
+                color: value.isFetching ? Colors.grey : Palatte.themeGreenColor,
+              ),
             ),
           ),
           Constants.height50,
