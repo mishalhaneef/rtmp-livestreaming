@@ -11,7 +11,7 @@ class LiveController extends ChangeNotifier {
   bool isSwitch = false;
   bool goingLive = false;
   Params config = Params();
-  late final ApiVideoLiveStreamController? controller;
+  late ApiVideoLiveStreamController controller;
   bool isStreaming = false;
 
   onButtonEnables(val) {
@@ -59,7 +59,8 @@ class LiveController extends ChangeNotifier {
   }
 
   Future<void> disposeLiveStreamController() async {
-    await controller?.dispose();
+    // await controller?.dispose();
+    log('not disposing');
   }
 
   void onMenuSelected(String choice, BuildContext context) {
@@ -73,8 +74,8 @@ class LiveController extends ChangeNotifier {
         context,
         MaterialPageRoute(
             builder: (context) => SettingsScreen(params: config)));
-    controller?.setVideoConfig(config.video);
-    controller?.setAudioConfig(config.audio);
+    controller.setVideoConfig(config.video);
+    controller.setAudioConfig(config.audio);
   }
 
   Future<void> switchCamera() async {
@@ -118,15 +119,15 @@ class LiveController extends ChangeNotifier {
   }
 
   Future<void> stopStreaming() async {
-    log("stopped stream");
-    final ApiVideoLiveStreamController? _controller = controller;
-
-    if (_controller == null) {
+    final ApiVideoLiveStreamController controller = this.controller;
+    log(controller.toString());
+    // ignore: unnecessary_null_comparison
+    if (controller == null) {
       print('Error: create a camera controller first.');
       return;
     }
 
-    return await _controller.stopStreaming();
+    return await controller.stopStreaming();
   }
 
   void onSwitchCameraButtonPressed() {

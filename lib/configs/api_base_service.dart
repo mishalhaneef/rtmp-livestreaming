@@ -45,6 +45,8 @@ class BaseApiService {
     try {
       Response response = await dio.get(ApiEndPoints.baseUrl + apiUrl);
       logApiResponse(response);
+      // print('awais check $response');
+      // log('awais check2 $response');
       return response;
     } catch (e) {
       if (e is DioException) {
@@ -170,7 +172,7 @@ void _handleApiError(DioException error) {
 }
 
 logApiResponse(Response response) {
-  log('Response statuscode : ${response.statusCode}');
-  log('request option : ${response.requestOptions.data}');
-  log('Response data: ${response.data}');
+  print('Response statuscode : ${response.statusCode}');
+  print('request option : ${response.requestOptions.data}');
+  print('Response data: ${response.data}');
 }

@@ -4,6 +4,7 @@ import 'package:livestream/core/colors.dart';
 import 'package:livestream/core/icons.dart';
 import 'package:livestream/features/chats/presentation/chats.dart';
 import 'package:livestream/features/home/presentation/home.dart';
+import 'package:livestream/features/live_setup/application/live_setup_controller.dart';
 import 'package:livestream/features/live_setup/presentation/live_setup_screen.dart';
 import 'package:livestream/features/profile/presentation/profile_screen.dart';
 import 'package:livestream/features/search/presentation/search.dart';
@@ -34,15 +35,35 @@ class RootScreen extends StatelessWidget {
           ),
           body: pages[value.currentIndex],
         ),
-        bottomNavigationBar: _bottomNavigationBar(value),
+        bottomNavigationBar: _bottomNavigationBar(value, context),
       ),
     );
   }
 
   BottomNavigationBar _bottomNavigationBar(
-      BottomNavigationBarController value) {
+      BottomNavigationBarController value, BuildContext context) {
     return BottomNavigationBar(
-      onTap: value.changeScreen,
+      onTap: (index) {
+        // if (index == 2) {
+        //   const LiveSetupScreen();
+        //   // If the user taps on the LiveSetupScreen again, no need to show confirmation
+        //   return;
+        // }
+
+        if (value.currentIndex == 2) {
+          // Show the confirmation dialog when leaving the LiveSetupScreen
+          final liveController =
+              Provider.of<LiveController>(context, listen: false);
+          if (liveController.isStreaming) {
+            showLeaveStreamConfirmationDialog(context, value, index);
+          } else {
+            value.changeScreen(index);
+          }
+        } else {
+          // Handle navigation to other screens
+          value.changeScreen(index);
+        }
+      },
       currentIndex: value.currentIndex,
       type: BottomNavigationBarType.fixed,
       elevation: 0,
@@ -83,4 +104,41 @@ class RootScreen extends StatelessWidget {
 
   Image _activeIcon(icon, {double height = 30}) =>
       Image.asset(icon, color: Palatte.theme, height: height);
+}
+
+void showLeaveStreamConfirmationDialog(
+  BuildContext context,
+  BottomNavigationBarController value,
+  int targetIndex,
+) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Are you sure?'),
+        content: const Text(
+            'Leaving the streaming screen will stop the live stream.'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text('Cancel'),
+          ),
+          Consumer<LiveController>(
+            builder: (context, liveController, child) => TextButton(
+              onPressed: () async {
+                value.changeScreen(targetIndex);
+                Navigator.of(context).pop();
+                liveController.onStopStreamingButtonPressed();
+                await liveController.stopStreaming();
+                await liveController.setStream(false);
+              },
+              child: const Text('Leave'),
+            ),
+          ),
+        ],
+      );
+    },
+  );
 }

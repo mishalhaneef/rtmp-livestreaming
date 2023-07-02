@@ -117,9 +117,7 @@ class RegistrationScreen extends StatelessWidget {
                 color: value.isFetching ? Colors.grey : Palatte.themeGreenColor,
               ),
             ),
-          ),
-          Constants.height50,
-          Constants.height50,
+          )
         ],
       ),
     );

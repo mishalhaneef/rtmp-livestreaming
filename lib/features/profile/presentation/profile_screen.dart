@@ -14,9 +14,14 @@ import 'package:livestream/routes/app_routes.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final userController = Provider.of<UserController>(context, listen: false);
@@ -88,7 +93,7 @@ class ProfileScreen extends StatelessWidget {
                               //   return progressIndicator(Colors.black);
                               // } else {
                               return GestureDetector(
-                                onTap: () async {
+                                onTap: () {
                                   if (settings == 'Edit Profile') {
                                     if (value.userModel.user == null) {
                                       Fluttertoast.showToast(
@@ -104,17 +109,6 @@ class ProfileScreen extends StatelessWidget {
                                     NavigationHandler.navigateTo(
                                         context, PrivacyPolicyScreen());
                                   }
-                                  if (settings == 'Log out') {
-                                    await FirebaseAuth.instance.signOut();
-                                    final pref =
-                                        await SharedPreferences.getInstance();
-                                    await pref.clear();
-
-                                    if (context.mounted) {
-                                      NavigationHandler.navigateTo(
-                                          context, const LoginScreen());
-                                    }
-                                  }
                                 },
                                 child: Text(
                                   settings,
@@ -124,12 +118,26 @@ class ProfileScreen extends StatelessWidget {
                             }
                                 // },
                                 ),
-                            Icon(
-                              settings == 'Log out'
-                                  ? Icons.logout
-                                  : Icons.keyboard_arrow_right,
-                              size: 25,
-                              color: Colors.grey,
+                            InkWell(
+                              onTap: () async {
+                                final pref =
+                                    await SharedPreferences.getInstance();
+
+                                await pref.clear();
+                                await FirebaseAuth.instance.signOut();
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => LoginScreen()),
+                                );
+                              },
+                              child: Icon(
+                                settings == 'Log out'
+                                    ? Icons.logout
+                                    : Icons.keyboard_arrow_right,
+                                size: 25,
+                                color: Colors.grey,
+                              ),
                             )
                           ],
                         ),

@@ -95,7 +95,7 @@ class LoginScreen extends StatelessWidget {
                         } else {
                           bool authenticated = await value
                               .loginWIthEmailAndPassword(email, password);
-            
+
                           if (authenticated) {
                             if (context.mounted) {
                               NavigationHandler.navigateOff(
@@ -107,9 +107,7 @@ class LoginScreen extends StatelessWidget {
                 color: value.isFetching ? Colors.grey : Palatte.themeGreenColor,
               ),
             ),
-          ),
-          Constants.height50,
-          Constants.height50,
+          )
         ],
       ),
     );

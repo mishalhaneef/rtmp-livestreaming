@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:apivideo_live_stream/apivideo_live_stream.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:livestream/core/colors.dart';
 import 'package:livestream/features/live_setup/application/live_setup_controller.dart';
@@ -24,20 +23,53 @@ class _LiveSetupScreenState extends State<LiveSetupScreen>
   final ButtonStyle buttonStyle =
       ElevatedButton.styleFrom(textStyle: const TextStyle(fontSize: 20));
 
-  // @override
-  // void initState() {
-  //   final liveController = Provider.of<LiveController>(context, listen: false);
-  //   WidgetsBinding.instance.addObserver(this);
-
-  //   liveController.createLiveStreamController();
-
-  //   liveController.controller!.initialize().catchError((e) {
-  //     Fluttertoast.showToast(msg: '$e');
-  //   });
-  //   super.initState();
-  // }
-
   @override
+  void initState() {
+    super.initState();
+    log('calls init');
+    WidgetsBinding.instance.addObserver(this);
+    final liveController = Provider.of<LiveController>(context, listen: false);
+
+    // _controller = createLiveStreamController();
+
+    // _controller.initialize().catchError((e) {
+    //   showInSnackBar(e.toString());
+    // });
+    WidgetsBinding.instance.addObserver(this);
+
+    //log("message : ${liveController.controller}");
+
+    log('is not init');
+    // liveController.createLiveStreamController();
+    liveController.controller = ApiVideoLiveStreamController(
+      initialAudioConfig: liveController.config.audio,
+      initialVideoConfig: liveController.config.video,
+      onConnectionSuccess: () {
+        print('Connection succeeded');
+      },
+      onConnectionFailed: (error) {
+        print('Connection failed: $error');
+        Fluttertoast.showToast(msg: 'Connection Failed');
+      },
+      onDisconnection: () {
+        Fluttertoast.showToast(msg: 'Disconnect');
+      },
+    );
+    ;
+    liveController.controller.initialize().catchError((e) {
+      Fluttertoast.showToast(msg: '$e');
+    });
+  }
+// @override
+//   void didChangeAppLifecycleState(AppLifecycleState state) {
+//     if (state == AppLifecycleState.inactive) {
+//       _controller.stop();
+//     } else if (state == AppLifecycleState.resumed) {
+//       _controller.startPreview();
+//     }
+//   }
+
+  // @override
   // void dispose() async {
   //   final liveController = Provider.of<LiveController>(context, listen: false);
   //   await liveController.disposeLiveStreamController();
@@ -45,15 +77,20 @@ class _LiveSetupScreenState extends State<LiveSetupScreen>
 
   //   super.dispose();
   // }
+  final bool _isStreaming = false;
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     final liveController = Provider.of<LiveController>(context, listen: false);
 
     if (state == AppLifecycleState.inactive) {
-      liveController.controller?.stop();
+      log(liveController.controller.toString());
+      log(state.toString());
+      liveController.controller.stopPreview();
+      liveController.controller.stop();
     } else if (state == AppLifecycleState.resumed) {
-      liveController.controller?.startPreview();
+      log(state.toString());
+      liveController.controller.startPreview();
     }
   }
 
@@ -134,7 +171,7 @@ class _LiveSetupScreenState extends State<LiveSetupScreen>
                           builder: (context, liveController, child) => Stack(
                             children: [
                               ApiVideoCameraPreview(
-                                  controller: liveController.controller!),
+                                  controller: liveController.controller),
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Container(
@@ -222,21 +259,49 @@ class _LiveSetupScreenState extends State<LiveSetupScreen>
                 color: value.isStreaming ? Colors.grey : Colors.red,
                 onPressed: value.isStreaming
                     ? null
-                    : () => value.onStartStreamingButtonPressed(userID),
+                    : () {
+                        !_isStreaming
+                            ? value
+                                .onStartStreamingButtonPressed(userID ?? null)
+                            : value
+                                .onStartStreamingButtonPressed(userID ?? null);
+                      },
               ),
               IconButton(
                 icon: const Icon(Icons.stop),
                 color: value.isStreaming ? Colors.red : Colors.grey,
                 onPressed: value.isStreaming
-                    ? () {
-                        value.onStopStreamingButtonPressed();
-                      }
-                    : null,
+                    ? value.onStopStreamingButtonPressed
+                    : value.onStopStreamingButtonPressed,
               )
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Future<void> _showDialog(
+      BuildContext context, String title, String description) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: SingleChildScrollView(
+            child: Text(description),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Dismiss'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

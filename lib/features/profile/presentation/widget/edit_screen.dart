@@ -15,10 +15,67 @@ import '../../../../core/colors.dart';
 import '../../../../core/indicator.dart';
 import '../../../../widgets/custom_button.dart';
 
-class EditScreen extends StatelessWidget {
+class EditScreen extends StatefulWidget {
   const EditScreen({super.key, required this.user});
 
   final UserData user;
+
+  @override
+  State<EditScreen> createState() => _EditScreenState();
+}
+
+class _EditScreenState extends State<EditScreen> {
+  // BaseApiService baseApiService = BaseApiService();
+  // final dio = Dio();
+  // TextEditingController userName = TextEditingController();
+  // TextEditingController name = TextEditingController();
+  // TextEditingController email = TextEditingController();
+  // final ImagePicker _imagePicker = ImagePicker();
+
+  // File? _image;
+
+  // Future<void> selectImage() async {
+  //   final pickedImage =
+  //       await _imagePicker.getImage(source: ImageSource.gallery);
+
+  //   if (pickedImage != null) {
+  //     _image = File(pickedImage.path);
+  //   }
+  // }
+
+  // Future<void> getApiCall() async {
+  //   FormData formData = FormData.fromMap({
+  //     'file': await MultipartFile.fromFile(_image!.path),
+  //   });
+
+  //   Map<String, dynamic> updatedData = {
+  //     "username": userName.text,
+  //     "name": name.text,
+  //     "email": email.text,
+  //     "image": formData
+  //   };
+
+  //   try {
+  //     Response response = await dio.post(
+  //         'http://5.161.179.168:3000/auth/user/edit/${widget.user.id}',
+  //         data: updatedData);
+  //     logApiResponse(response);
+
+  //     if (response.statusCode == 200) {
+  //       final data = response.data;
+  //       log("New Changes========?>>>>>>  ${data.toString()}");
+  //     } else {
+  //       return null;
+  //     }
+  //   } catch (e) {
+  //     if (e is DioException) {
+  //       print(e);
+  //     }
+  //     print('Get Request Error: $e');
+  //     return null;
+  //   }
+  // }
+
   @override
   Widget build(BuildContext context) {
     final userController = Provider.of<UserController>(context, listen: false);
@@ -45,12 +102,12 @@ class EditScreen extends StatelessWidget {
         ),
       ),
       body: SafeArea(
-        child: ListView(
-          // crossAxisAlignment: CrossAxisAlignment.start,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Constants.height20,
             UserDetail(
-              user: user,
+              user: widget.user,
               isEdit: true,
             ),
             Constants.height50,
@@ -84,7 +141,7 @@ class EditScreen extends StatelessWidget {
               },
               separatorBuilder: (context, index) => const SizedBox(height: 25),
             ),
-            SizedBox(height: 50),
+            const Spacer(),
             Center(
               child: Consumer<ProfileController>(
                 builder: (context, value, child) => AppButton(
@@ -101,7 +158,7 @@ class EditScreen extends StatelessWidget {
                   onTap: value.isFetching
                       ? null
                       : () async {
-                          await value.saveEditedProfileData(user.id);
+                          await value.saveEditedProfileData(widget.user.id);
                         },
                   color:
                       value.isFetching ? Colors.grey : Palatte.themeGreenColor,
