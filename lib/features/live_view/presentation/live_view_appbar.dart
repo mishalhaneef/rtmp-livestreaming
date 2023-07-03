@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:livestream/core/colors.dart';
-import 'package:livestream/features/home/model/home/stream_cover_model.dart';
-import 'package:livestream/features/live_view/application/live_view_controller.dart';
 import 'package:livestream/routes/app_routes.dart';
 import 'package:provider/provider.dart';
+
+import '../../home/model/stream_model.dart';
+import '../application/live_view_controller.dart';
 
 class LiveViewAppBar extends StatelessWidget {
   const LiveViewAppBar({
@@ -11,7 +12,7 @@ class LiveViewAppBar extends StatelessWidget {
     required this.streamer,
   });
 
-  final StreamCoverModel streamer;
+  final Live streamer;
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +39,7 @@ class LiveViewAppBar extends StatelessWidget {
               backgroundColor: Colors.red,
               child: CircleAvatar(
                 radius: 30,
-                backgroundImage: NetworkImage(streamer.streamerProfilePicture),
+                backgroundImage: NetworkImage(streamer.user!.image!),
               ),
             ),
             Positioned(
@@ -68,7 +69,7 @@ class LiveViewAppBar extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              streamer.streamerName,
+              streamer.user!.username ?? '',
               style: const TextStyle(
                 fontSize: 16,
                 color: Colors.white,
@@ -92,7 +93,7 @@ class LiveViewAppBar extends StatelessWidget {
                     ),
                     const SizedBox(width: 5),
                     Text(
-                      streamer.viewCount,
+                      streamer.v.toString(),
                       style: const TextStyle(
                         color: Colors.white,
                       ),

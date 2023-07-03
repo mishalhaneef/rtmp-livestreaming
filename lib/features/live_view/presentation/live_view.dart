@@ -1,85 +1,107 @@
 import 'package:flutter/material.dart';
 import 'package:livestream/core/constants.dart';
 import 'package:livestream/core/icons.dart';
-import 'package:livestream/features/home/model/home/stream_cover_model.dart';
 import 'package:livestream/features/live_view/application/live_view_controller.dart';
 import 'package:livestream/features/live_view/presentation/live_view_appbar.dart';
 import 'package:livestream/widgets/custom_button.dart';
 import 'package:provider/provider.dart';
+import 'package:video_player/video_player.dart';
+import 'package:chewie/chewie.dart';
 
 import '../../../core/colors.dart';
 import '../../../routes/app_routes.dart';
+import '../../home/model/stream_model.dart';
 
-class LiveScreen extends StatelessWidget {
+class LiveScreen extends StatefulWidget {
   const LiveScreen({super.key, required this.streamer});
 
-  final StreamCoverModel streamer;
+  final Live streamer;
+
+  @override
+  State<LiveScreen> createState() => _LiveScreenState();
+}
+
+class _LiveScreenState extends State<LiveScreen> {
+  late VideoPlayerController _videoPlayerController;
+  late ChewieController _chewieController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Replace 'YOUR_FLV_STREAM_URL' with the actual FLV stream URL you want to play
+    _videoPlayerController =
+        VideoPlayerController.network(widget.streamer.url!);
+    _chewieController = ChewieController(
+      videoPlayerController: _videoPlayerController,
+      autoPlay: true,
+      looping: false,
+      // Other ChewieController customization options
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: NetworkImage(streamer.thumbnail),
-            fit: BoxFit.cover,
+      body: Stack(
+        children: [
+          Center(
+            child: Chewie(
+              controller: _chewieController,
+            ),
           ),
-        ),
-        child: Stack(
-          children: [
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: Container(
-                height: 400,
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              height: 400,
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Colors.black, Colors.transparent],
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.topCenter,
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            left: 0,
+            right: 0,
+            top: 0,
+            child: Container(
+              height: 250,
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
                     colors: [Colors.black, Colors.transparent],
-                    begin: Alignment.bottomCenter,
-                    end: Alignment.topCenter,
-                  ),
-                ),
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter),
               ),
             ),
-            Positioned(
-              left: 0,
-              right: 0,
-              top: 0,
-              child: Container(
-                height: 250,
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                      colors: [Colors.black, Colors.transparent],
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter),
-                ),
+          ),
+          const Center(
+            child: CircularProgressIndicator.adaptive(
+              backgroundColor: Colors.white,
+              // color: Palatte.theme,
+            ),
+          ),
+          Column(
+            children: [
+              Constants.height50,
+              LiveViewAppBar(streamer: widget.streamer),
+              const Spacer(),
+              _buildLiveChats(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  _buildCommentField(),
+                  // _buildGiftWidget(context, streamer),
+                ],
               ),
-            ),
-            const Center(
-              child: CircularProgressIndicator.adaptive(
-                backgroundColor: Colors.white,
-                // color: Palatte.theme,
-              ),
-            ),
-            Column(
-              children: [
-                Constants.height50,
-                LiveViewAppBar(streamer: streamer),
-                const Spacer(),
-                _buildLiveChats(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    _buildCommentField(),
-                    _buildGiftWidget(context, streamer.streamerName),
-                  ],
-                ),
-                Constants.height50,
-              ],
-            ),
-          ],
-        ),
+              Constants.height50,
+            ],
+          ),
+        ],
       ),
     );
   }

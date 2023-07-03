@@ -5,15 +5,23 @@ class BottomNavIcons {
   static const goLive = 'assets/bottom_nav_icons/selected/go_live.png';
   static const search = 'assets/bottom_nav_icons/selected/search.png';
   static const profile = 'assets/bottom_nav_icons/selected/profile.png';
-  // unselected 
+  // unselected
   static const unselectedhome = 'assets/bottom_nav_icons/unselected/home.png';
   static const unselectedchats = 'assets/bottom_nav_icons/unselected/chats.png';
-  static const unselectedgoLive = 'assets/bottom_nav_icons/unselected/go_live.png';
-  static const unselectedsearch = 'assets/bottom_nav_icons/unselected/search.png';
-  static const unselectedprofile = 'assets/bottom_nav_icons/unselected/profile.png';
+  static const unselectedgoLive =
+      'assets/bottom_nav_icons/unselected/go_live.png';
+  static const unselectedsearch =
+      'assets/bottom_nav_icons/unselected/search.png';
+  static const unselectedprofile =
+      'assets/bottom_nav_icons/unselected/profile.png';
 }
 
 class AppIcon {
   static const gift = 'assets/icons/gift.png';
   static const appLogo = 'assets/applogo.png';
+}
+
+class AppImages {
+  static const imageNotAvailable =
+      "https://t3.ftcdn.net/jpg/04/62/93/66/360_F_462936689_BpEEcxfgMuYPfTaIAOC1tCDurmsno7Sp.jpg";
 }

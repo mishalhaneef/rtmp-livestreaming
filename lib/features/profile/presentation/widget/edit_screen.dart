@@ -25,57 +25,6 @@ class EditScreen extends StatefulWidget {
 }
 
 class _EditScreenState extends State<EditScreen> {
-  // BaseApiService baseApiService = BaseApiService();
-  // final dio = Dio();
-  // TextEditingController userName = TextEditingController();
-  // TextEditingController name = TextEditingController();
-  // TextEditingController email = TextEditingController();
-  // final ImagePicker _imagePicker = ImagePicker();
-
-  // File? _image;
-
-  // Future<void> selectImage() async {
-  //   final pickedImage =
-  //       await _imagePicker.getImage(source: ImageSource.gallery);
-
-  //   if (pickedImage != null) {
-  //     _image = File(pickedImage.path);
-  //   }
-  // }
-
-  // Future<void> getApiCall() async {
-  //   FormData formData = FormData.fromMap({
-  //     'file': await MultipartFile.fromFile(_image!.path),
-  //   });
-
-  //   Map<String, dynamic> updatedData = {
-  //     "username": userName.text,
-  //     "name": name.text,
-  //     "email": email.text,
-  //     "image": formData
-  //   };
-
-  //   try {
-  //     Response response = await dio.post(
-  //         'http://5.161.179.168:3000/auth/user/edit/${widget.user.id}',
-  //         data: updatedData);
-  //     logApiResponse(response);
-
-  //     if (response.statusCode == 200) {
-  //       final data = response.data;
-  //       log("New Changes========?>>>>>>  ${data.toString()}");
-  //     } else {
-  //       return null;
-  //     }
-  //   } catch (e) {
-  //     if (e is DioException) {
-  //       print(e);
-  //     }
-  //     print('Get Request Error: $e');
-  //     return null;
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     final userController = Provider.of<UserController>(context, listen: false);
@@ -92,6 +41,7 @@ class _EditScreenState extends State<EditScreen> {
     });
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.transparent,
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.black),
@@ -102,8 +52,7 @@ class _EditScreenState extends State<EditScreen> {
         ),
       ),
       body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: ListView(
           children: [
             Constants.height20,
             UserDetail(
@@ -141,7 +90,7 @@ class _EditScreenState extends State<EditScreen> {
               },
               separatorBuilder: (context, index) => const SizedBox(height: 25),
             ),
-            const Spacer(),
+            Constants.height50,
             Center(
               child: Consumer<ProfileController>(
                 builder: (context, value, child) => AppButton(

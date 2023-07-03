@@ -56,6 +56,8 @@ PODS:
   - Logboard (2.3.1)
   - native_device_orientation (0.0.1):
     - Flutter
+  - package_info_plus (0.4.5):
+    - Flutter
   - permission_handler_apple (9.1.1):
     - Flutter
   - PromisesObjC (2.2.0)
@@ -63,6 +65,10 @@ PODS:
     - Flutter
     - FlutterMacOS
   - Toast (4.0.0)
+  - video_player_avfoundation (0.0.1):
+    - Flutter
+  - wakelock_plus (0.0.1):
+    - Flutter
 
 DEPENDENCIES:
   - apivideo_live_stream (from `.symlinks/plugins/apivideo_live_stream/ios`)
@@ -72,8 +78,11 @@ DEPENDENCIES:
   - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
   - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
   - native_device_orientation (from `.symlinks/plugins/native_device_orientation/ios`)
+  - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
+  - video_player_avfoundation (from `.symlinks/plugins/video_player_avfoundation/ios`)
+  - wakelock_plus (from `.symlinks/plugins/wakelock_plus/ios`)
 
 SPEC REPOS:
   trunk:
@@ -105,10 +114,16 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/image_picker_ios/ios"
   native_device_orientation:
     :path: ".symlinks/plugins/native_device_orientation/ios"
+  package_info_plus:
+    :path: ".symlinks/plugins/package_info_plus/ios"
   permission_handler_apple:
     :path: ".symlinks/plugins/permission_handler_apple/ios"
   shared_preferences_foundation:
     :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
+  video_player_avfoundation:
+    :path: ".symlinks/plugins/video_player_avfoundation/ios"
+  wakelock_plus:
+    :path: ".symlinks/plugins/wakelock_plus/ios"
 
 SPEC CHECKSUMS:
   apivideo_live_stream: 6e418549d39066f38762aaea829cb9d6035bec3a
@@ -128,10 +143,13 @@ SPEC CHECKSUMS:
   image_picker_ios: 4a8aadfbb6dc30ad5141a2ce3832af9214a705b5
   Logboard: 3d98bb85de6a36b255ab637e8178eb5671c5c3a6
   native_device_orientation: 3b4cfc9565a7b879cc4fde282b3e27745e852d0d
+  package_info_plus: fd030dabf36271f146f1f3beacd48f564b0f17f7
   permission_handler_apple: e76247795d700c14ea09e3a2d8855d41ee80a2e6
   PromisesObjC: 09985d6d70fbe7878040aa746d78236e6946d2ef
   shared_preferences_foundation: e2dae3258e06f44cc55f49d42024fd8dd03c590c
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
+  video_player_avfoundation: 81e49bb3d9fb63dccf9fa0f6d877dc3ddbeac126
+  wakelock_plus: 8b09852c8876491e4b6d179e17dfe2a0b5f60d47
 
 PODFILE CHECKSUM: 70d9d25280d0dd177a5f637cdb0f0b0b12c6a189
 

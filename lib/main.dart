@@ -5,6 +5,7 @@ import 'package:livestream/controller/user_base_controller.dart';
 import 'package:livestream/core/enums.dart';
 import 'package:livestream/features/authentication/application/authentication_controller.dart';
 import 'package:livestream/features/chats/application/chat_controller.dart';
+import 'package:livestream/features/home/application/home_controller.dart';
 import 'package:livestream/features/live_setup/application/live_setup_controller.dart';
 import 'package:livestream/features/profile/application/profile_controller.dart';
 import 'package:livestream/features/search/application/search_controller.dart';
@@ -54,6 +55,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) => ProfileController(),
         ),
+        ChangeNotifierProvider(
+          create: (context) => StreamDisplayController(),
+        ),
       ],
       child: MaterialApp(
           debugShowCheckedModeBanner: false,
@@ -67,12 +71,13 @@ class MyApp extends StatelessWidget {
               // if (snapshot.connectionState == ConnectionState.waiting) {
               //   return const SplashScreen(authStaus: AuthState.waiting);
               // } else {
-                if (snapshot.hasData) {
-                  return const SplashScreen(authStaus: AuthState.authenticated);
-                } else {
-                  return const SplashScreen(authStaus: AuthState.newUser);
-                }
-              
+              if (snapshot.hasData) {
+                return const SplashScreen(
+                  authStaus: AuthState.authenticated,
+                );
+              } else {
+                return const SplashScreen(authStaus: AuthState.newUser);
+              }
             },
           )),
     );

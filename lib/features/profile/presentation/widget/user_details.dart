@@ -1,84 +1,66 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:livestream/core/base_user_model.dart';
 import 'package:livestream/core/constants.dart';
+import 'package:livestream/features/profile/application/profile_controller.dart';
 import 'package:provider/provider.dart';
 
-import '../../application/profile_controller.dart';
-
-class UserDetail extends StatefulWidget {
+class UserDetail extends StatelessWidget {
   const UserDetail({super.key, required this.user, this.isEdit = false});
 
-  final bool isEdit; 
+  final bool isEdit;
   final UserData user;
 
   @override
-  State<UserDetail> createState() => _UserDetailState();
-}
-
-class _UserDetailState extends State<UserDetail> {
-  // File? _image;
-  // Future<void> _selectImage() async {
-  //   final picker = ImagePicker();
-  //   final pickedImage = await picker.pickImage(source: ImageSource.gallery);
-
-  //   if (pickedImage != null) {
-  //     setState(() {
-  //       _image = File(pickedImage.path);
-  //     });
-
-  // final bytes = await _image!.readAsBytes();
-  // final base64Image = base64Encode(bytes);
-
-  //     final prefs = await SharedPreferences.getInstance();
-  //     await prefs.setString('thumbnail', base64Image);
-  //   }
-  // }
-
-  @override
   Widget build(BuildContext context) {
-    final profileController =
-        Provider.of<ProfileController>(context, listen: false);
-
     return Center(
       child: Column(
         children: [
-          Stack(
-            children: [
-              profileController.image != null
-                  ? CircleAvatar(
-                      radius: 50,
-                      backgroundImage: FileImage(profileController.image!),
-                    )
-                  : InkWell(
-                      onTap: () {
-                        setState(() {
-                          profileController
-                              .saveEditedProfileData(widget.user.id);
-                        });
-                        print('click');
-                      },
-                      child: CircleAvatar(
-                        radius: 55,
-                        backgroundColor: Colors.white,
-                        backgroundImage: NetworkImage(widget.user.image!),
-                      ),
-                    ),
-              widget.isEdit
-                  ? const Positioned(
-                      bottom: 0,
-                      left: 0,
-                      right: 0,
-                      child: CircleAvatar(
-                        backgroundColor: Colors.white,
-                        child: Icon(Icons.camera_alt),
-                      ),
-                    )
-                  : const SizedBox()
-            ],
+          Consumer<ProfileController>(
+            builder: (context, value, child) {
+              return GestureDetector(
+                onTap: () async {
+                  await value.selectImage();
+                },
+                child: Stack(
+                  children: [
+                    value.image != null
+                        ? CircleAvatar(
+                            radius: 50,
+                            child: ClipOval(
+                              child: Image.file(
+                                File(value.image!.path),
+                                width: 100,
+                                height: 100,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          )
+                        : CircleAvatar(
+                            radius: 50,
+                            backgroundImage: NetworkImage(user.image ?? ''),
+                          ),
+                    if (isEdit)
+                      const Positioned(
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        child: CircleAvatar(
+                          backgroundColor: Colors.white,
+                          child: Icon(Icons.camera_alt),
+                        ),
+                      )
+                    else
+                      const SizedBox()
+                  ],
+                ),
+              );
+            },
           ),
           Constants.height20,
           Text(
-            widget.user.name ?? '',
+            user.name ?? '',
             style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
           ),
           Constants.height5,
@@ -86,7 +68,7 @@ class _UserDetailState extends State<UserDetail> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                widget.user.username ?? '',
+                user.username ?? '',
                 style: const TextStyle(fontSize: 16),
               ),
               const SizedBox(width: 5),

@@ -12,3 +12,4 @@ class Constants {
 class PreferenceConstants {
   static String userID = 'userID';
 }
+

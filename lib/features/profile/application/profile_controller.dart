@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
@@ -15,58 +17,59 @@ class ProfileController extends ChangeNotifier {
   bool isFetching = false;
   BaseApiService baseApiService = BaseApiService();
   Map<String, dynamic> userData = {};
-  // final ImagePicker _imagePicker = ImagePicker();
+  final ImagePicker imagePicker = ImagePicker();
 
-  static File? _image;
+  File? image;
 
-  File? get image => _image;
+  Future<void> selectImage() async {
+    try {
+      final pickedImage =
+          await imagePicker.pickImage(source: ImageSource.gallery);
 
-  // Future<void> selectImage() async {
-  //   final pickedImage =
-  //       await _imagePicker.getImage(source: ImageSource.gallery);
+      if (pickedImage != null) {
+        log('imaged picked ${pickedImage.path}');
+        image = File(pickedImage.path);
+        notifyListeners();
+      }
+    } catch (e) {
+      log('error picking image $e');
+    }
+  }
 
-  //   if (pickedImage != null) {
-  //     _image = File(pickedImage.path);
-  //     final bytes = await _image!.readAsBytes();
-  //     final base64Image = base64Encode(bytes);
-
-  //     notifyListeners();
-  //   }
-  // }
+  cleareSelectedImage() {
+    image = null;
+    notifyListeners();
+  }
 
   Future<void> saveEditedProfileData(String? userID) async {
-    final picker = ImagePicker();
-    final pickedImage = await picker.getImage(source: ImageSource.gallery);
-    final imageBytes = await pickedImage!.readAsBytes();
-
     isFetching = true;
     notifyListeners();
 
-    // final bytes = await _image!.readAsBytes();
-    // final base64Image = base64Encode(bytes);
-    // final bytes = await _image!.readAsBytes();
-    // final base64Image = base64Encode(bytes);
+    final multipartImage = await MultipartFile.fromFile(
+      image!.path,
+      filename: image!.path,
+    );
+
     final body = {
       "username": usernameController.text,
       "name": fullnameController.text,
       "email": emailController.text,
-      "image": imageBytes
+      "image": multipartImage,
     };
 
-    log('body : $body');
     if (userID == null) {
       Fluttertoast.showToast(msg: 'Please try again, something went wrong');
     } else {
-      // ignore: unnecessary_null_comparison
-      if (pickedImage != null) {
-        final response = await baseApiService.postApiCall(
-          '${ApiEndPoints.edit}$userID',
-          body: body,
-        );
-        if (response!.statusCode == 200) {
-          // Image uploaded successfully
-          print('Image uploaded!');
-        }
+      final response = await baseApiService
+          .avatarUploadApiCall('${ApiEndPoints.edit}$userID', body: body);
+      // final response = await baseApiService.postApiCall(
+      //   '${ApiEndPoints.edit}$userID',
+      //   body: body,
+      // );
+
+      if (response != null) {
+        log("repsonse : ${response.data}");
+        Fluttertoast.showToast(msg: "Profile Updated");
       }
     }
 
