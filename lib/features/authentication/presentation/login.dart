@@ -94,7 +94,7 @@ class LoginScreen extends StatelessWidget {
                           Fluttertoast.showToast(msg: "Enter password");
                         } else {
                           bool authenticated = await value
-                              .loginWIthEmailAndPassword(email, password);
+                              .login(email, password);
 
                           if (authenticated) {
                             if (context.mounted) {

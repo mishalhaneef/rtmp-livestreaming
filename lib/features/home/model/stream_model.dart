@@ -25,7 +25,7 @@ class Live {
   String? id;
   String? live;
   User? user;
-  String? url;
+  Url? url;
   DateTime? createdAt;
   DateTime? updatedAt;
   int? v;
@@ -44,7 +44,7 @@ class Live {
         id: json["_id"],
         live: json["live"],
         user: User.fromJson(json["user"]),
-        url: json["url"],
+        url: Url.fromJson(json["url"]),
         createdAt: DateTime.parse(json["createdAt"]),
         updatedAt: DateTime.parse(json["updatedAt"]),
         v: json["__v"],
@@ -54,7 +54,7 @@ class Live {
         "_id": id,
         "live": live,
         "user": user!.toJson(),
-        "url": url,
+        "url": url!.toJson(),
         "createdAt": createdAt!.toIso8601String(),
         "updatedAt": updatedAt!.toIso8601String(),
         "__v": v,
@@ -106,5 +106,37 @@ class User {
         "createdAt": createdAt!.toIso8601String(),
         "updatedAt": updatedAt!.toIso8601String(),
         "__v": v,
+      };
+}
+
+class Url {
+  String? flv;
+  String? rtmp;
+  String? dash;
+  String? wsFlv;
+  String? hls;
+
+  Url({
+    this.flv,
+    this.rtmp,
+    this.dash,
+    this.wsFlv,
+    this.hls,
+  });
+
+  factory Url.fromJson(Map<String, dynamic> json) => Url(
+        flv: json["flv"],
+        rtmp: json["rtmp"],
+        dash: json["dash"],
+        wsFlv: json["ws_flv"],
+        hls: json["hls"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "flv": flv,
+        "rtmp": rtmp,
+        "dash": dash,
+        "ws_flv": wsFlv,
+        "hls": hls,
       };
 }

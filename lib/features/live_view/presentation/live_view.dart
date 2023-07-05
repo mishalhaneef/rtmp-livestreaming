@@ -1,12 +1,13 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_vlc_player/flutter_vlc_player.dart';
 import 'package:livestream/core/constants.dart';
 import 'package:livestream/core/icons.dart';
 import 'package:livestream/features/live_view/application/live_view_controller.dart';
 import 'package:livestream/features/live_view/presentation/live_view_appbar.dart';
 import 'package:livestream/widgets/custom_button.dart';
 import 'package:provider/provider.dart';
-import 'package:video_player/video_player.dart';
-import 'package:chewie/chewie.dart';
 
 import '../../../core/colors.dart';
 import '../../../routes/app_routes.dart';
@@ -22,22 +23,28 @@ class LiveScreen extends StatefulWidget {
 }
 
 class _LiveScreenState extends State<LiveScreen> {
-  late VideoPlayerController _videoPlayerController;
-  late ChewieController _chewieController;
+  late VlcPlayerController _videoPlayerController;
+
+  Future<void> initializePlayer() async {}
 
   @override
   void initState() {
     super.initState();
 
-    // Replace 'YOUR_FLV_STREAM_URL' with the actual FLV stream URL you want to play
-    _videoPlayerController =
-        VideoPlayerController.network(widget.streamer.url!);
-    _chewieController = ChewieController(
-      videoPlayerController: _videoPlayerController,
-      autoPlay: true,
-      looping: false,
-      // Other ChewieController customization options
+    log("URL : ${widget.streamer.url!.rtmp!}");
+
+    _videoPlayerController = VlcPlayerController.network(
+      widget.streamer.url!.rtmp!,
+      hwAcc: HwAcc.full,
+      autoPlay: false,
+      options: VlcPlayerOptions(),
     );
+  }
+
+  @override
+  void dispose() async {
+    super.dispose();
+    await _videoPlayerController.stopRendererScanning();
   }
 
   @override
@@ -46,8 +53,10 @@ class _LiveScreenState extends State<LiveScreen> {
       body: Stack(
         children: [
           Center(
-            child: Chewie(
-              controller: _chewieController,
+            child: VlcPlayer(
+              controller: _videoPlayerController,
+              aspectRatio: 16 / 9,
+              placeholder: Center(child: CircularProgressIndicator()),
             ),
           ),
           Positioned(

@@ -78,7 +78,7 @@ class BaseApiService {
     }
   }
 
-  Future<Response?> avatarUploadApiCall(
+  Future<Response?> imageUpload(
     String apiUrl, {
     dynamic body,
     String? contentType,

@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:livestream/controller/user_base_controller.dart';
@@ -93,7 +94,7 @@ class ProfileScreen extends StatelessWidget {
                                   //   return progressIndicator(Colors.black);
                                   // } else {
                                   return GestureDetector(
-                                    onTap: () {
+                                    onTap: () async {
                                       if (settings == 'Edit Profile') {
                                         if (value.userModel.user == null) {
                                           Fluttertoast.showToast(
@@ -109,6 +110,16 @@ class ProfileScreen extends StatelessWidget {
                                       if (settings == 'Privacy Policy') {
                                         NavigationHandler.navigateTo(
                                             context, PrivacyPolicyScreen());
+                                      }
+                                      if (settings == 'Log Out') {
+                                        final pref = await SharedPreferences
+                                            .getInstance();
+                                        await FirebaseAuth.instance.signOut();
+                                        await pref.clear();
+                                        if (context.mounted) {
+                                          NavigationHandler.navigateTo(
+                                              context, const LoginScreen());
+                                        }
                                       }
                                     },
                                     child: Text(

@@ -30,12 +30,15 @@ environment:
 dependencies:
   apivideo_live_stream: ^1.1.1
   chewie: ^1.6.0+1
+  cloud_firestore: ^4.8.2
   cupertino_icons: ^1.0.2
   dio: ^5.2.1+1
   firebase_auth: ^4.6.3
   firebase_core: ^2.14.0
+  firebase_storage: ^11.2.4
   flutter:
     sdk: flutter
+  flutter_vlc_player: ^7.2.0
   fluttertoast: ^8.2.2
   image_picker: ^0.8.9
   intl: ^0.18.1

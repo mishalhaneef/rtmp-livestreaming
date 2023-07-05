@@ -7,6 +7,7 @@ import 'package:livestream/core/user_preference_manager.dart';
 import 'package:livestream/features/profile/application/profile_controller.dart';
 import 'package:livestream/features/profile/model/user_profile_items/user_profile_items.dart';
 import 'package:livestream/features/profile/presentation/widget/user_details.dart';
+import 'package:livestream/routes/app_routes.dart';
 import 'package:livestream/widgets/textfield.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -107,7 +108,10 @@ class _EditScreenState extends State<EditScreen> {
                   onTap: value.isFetching
                       ? null
                       : () async {
-                          await value.saveEditedProfileData(widget.user.id);
+                          await value.saveEditedProfileData(widget.user);
+                          if (context.mounted) {
+                            NavigationHandler.pop(context);
+                          }
                         },
                   color:
                       value.isFetching ? Colors.grey : Palatte.themeGreenColor,

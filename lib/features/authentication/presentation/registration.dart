@@ -100,7 +100,7 @@ class RegistrationScreen extends StatelessWidget {
                           Fluttertoast.showToast(msg: 'Enter Email');
                         } else {
                           bool authenticated =
-                              await value.registerWithEmailAndPassword(
+                              await value.register(
                             username,
                             fullName,
                             email,

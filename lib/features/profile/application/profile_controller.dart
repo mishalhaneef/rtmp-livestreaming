@@ -1,13 +1,12 @@
-import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:livestream/configs/api_base_service.dart';
 import 'package:livestream/configs/api_end_points.dart';
 import 'package:livestream/core/base_user_model.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 class ProfileController extends ChangeNotifier {
   TextEditingController usernameController = TextEditingController();
@@ -41,40 +40,52 @@ class ProfileController extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> saveEditedProfileData(String? userID) async {
+  Future<void> saveEditedProfileData(UserData user) async {
     isFetching = true;
     notifyListeners();
 
-    final multipartImage = await MultipartFile.fromFile(
-      image!.path,
-      filename: image!.path,
-    );
+    try {
+      String? imageURL = user.image;
 
-    final body = {
-      "username": usernameController.text,
-      "name": fullnameController.text,
-      "email": emailController.text,
-      "image": multipartImage,
-    };
+      if (image != null) {
+        File imageFile = File(image!.path);
+        String fileName = imageFile.path.split('/').last;
 
-    if (userID == null) {
-      Fluttertoast.showToast(msg: 'Please try again, something went wrong');
-    } else {
-      final response = await baseApiService
-          .avatarUploadApiCall('${ApiEndPoints.edit}$userID', body: body);
-      // final response = await baseApiService.postApiCall(
-      //   '${ApiEndPoints.edit}$userID',
-      //   body: body,
-      // );
+        firebase_storage.Reference ref =
+            firebase_storage.FirebaseStorage.instance.ref().child(fileName);
+        firebase_storage.UploadTask uploadTask = ref.putFile(imageFile);
 
-      if (response != null) {
-        log("repsonse : ${response.data}");
-        Fluttertoast.showToast(msg: "Profile Updated");
+        log("uploaded : ${uploadTask.snapshot.storage.app.name}");
+
+        await uploadTask.whenComplete(() async {
+          imageURL = await ref.getDownloadURL();
+        });
       }
-    }
 
-    isFetching = false;
-    notifyListeners();
+      final body = {
+        "username": usernameController.text,
+        "name": fullnameController.text,
+        "email": emailController.text,
+        "image": imageURL,
+      };
+
+      if (user.id == null) {
+        Fluttertoast.showToast(msg: 'Please try again, something went wrong');
+      } else {
+        final response = await baseApiService
+            .postApiCall('${ApiEndPoints.edit}${user.id}', body: body);
+
+        if (response != null) {
+          log("response: ${response.data}");
+          Fluttertoast.showToast(msg: "Profile Updated");
+        }
+      }
+    } catch (e) {
+      log("Error caught while saving edited profile");
+    } finally {
+      isFetching = false;
+      notifyListeners();
+    }
   }
 
   String getHintText(String settings, UserData user) {

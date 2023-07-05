@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:livestream/controller/bottom_nav_controller.dart';
@@ -18,9 +19,13 @@ import 'features/live_view/application/live_view_controller.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  FirebaseFirestore.instance.settings =
+      const Settings(persistenceEnabled: false);
+
   runApp(const MyApp());
 }
 
@@ -63,14 +68,12 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           title: 'Live Stream',
           theme: ThemeData(
+            visualDensity: VisualDensity.adaptivePlatformDensity,
             primarySwatch: Colors.blue,
           ),
           home: StreamBuilder<User?>(
             stream: FirebaseAuth.instance.authStateChanges(),
             builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
-              // if (snapshot.connectionState == ConnectionState.waiting) {
-              //   return const SplashScreen(authStaus: AuthState.waiting);
-              // } else {
               if (snapshot.hasData) {
                 return const SplashScreen(
                   authStaus: AuthState.authenticated,

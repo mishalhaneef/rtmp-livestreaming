@@ -20,7 +20,7 @@ class AuthenticationController extends ChangeNotifier {
   bool isSigned = false;
   bool isFetching = false;
 
-  Future<bool> loginWIthEmailAndPassword(
+  Future<bool> login(
     String email,
     String password,
   ) async {
@@ -29,13 +29,16 @@ class AuthenticationController extends ChangeNotifier {
       notifyListeners();
       if (email.isEmpty) {
         Fluttertoast.showToast(msg: 'Enter Email');
+        return false;
       } else if (password.isEmpty) {
         Fluttertoast.showToast(msg: 'Enter Password');
+        return false;
       } else {
         final userCredential = await firebaseAuthService
             .signinWithEmailAndPassword(email, password);
 
         if (userCredential != null) {
+          log('user cred : $userCredential');
           final body = {
             "username": email,
             "password": password,
@@ -54,10 +57,12 @@ class AuthenticationController extends ChangeNotifier {
             notifyListeners();
             return true;
           }
+          return false;
         }
       }
     } catch (e) {
       log(e.toString());
+      return false;
     } finally {
       isFetching = false;
       notifyListeners();
@@ -65,7 +70,7 @@ class AuthenticationController extends ChangeNotifier {
     return false;
   }
 
-  Future<bool> registerWithEmailAndPassword(
+  Future<bool> register(
     String username,
     String fullName,
     String email,

@@ -12,10 +12,14 @@ class StreamDisplayController extends ChangeNotifier {
   StreamModel streamModel = StreamModel();
 
   Future<void> getLive() async {
+    isFetching = true;
+    notifyListeners();
     final response = await baseApiService.getApiCall(ApiEndPoints.lives);
     if (response != null) {
       streamModel = streamFromJson(jsonEncode(response.data));
     }
+    isFetching = false;
+    notifyListeners();
     log("response : $response");
   }
 }
