@@ -102,6 +102,7 @@ class LiveController extends ChangeNotifier {
 
   Future<void> startStreaming(String? userID) async {
     final ApiVideoLiveStreamController? _controller = controller;
+    
 
     String rtmpUrl = "${ApiEndPoints.rtmpBaseUrl}/$userID";
     String streamKey = "live";

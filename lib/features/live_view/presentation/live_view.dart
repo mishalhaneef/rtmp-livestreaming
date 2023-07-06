@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 // import 'package:flutter_vlc_player/flutter_vlc_player.dart';
 import 'package:livestream/core/icons.dart';
-import 'package:livestream/features/live_view/application/live_view_controller.dart';
 import 'package:livestream/widgets/custom_button.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
@@ -11,6 +10,7 @@ import 'package:video_player/video_player.dart';
 import '../../../core/colors.dart';
 import '../../../routes/app_routes.dart';
 import '../../home/model/stream_model.dart';
+import '../../live_chats/application/live_chat_controller.dart';
 import '../../live_chats/presentation/live_chat.dart';
 
 class LiveScreen extends StatefulWidget {
@@ -31,10 +31,10 @@ class _LiveScreenState extends State<LiveScreen> {
   void initState() {
     super.initState();
 
-    log("URL : ${widget.streamer.url!.rtmp!}");
+    log("URL : ${widget.streamer.url!.wsFlv!}");
 
     _videoPlayerController =
-        VideoPlayerController.network(widget.streamer.url!.rtmp!)
+        VideoPlayerController.network(widget.streamer.url!.wsFlv!)
           ..initialize().then((_) {
             setState(() {});
           });
@@ -123,7 +123,7 @@ class _LiveScreenState extends State<LiveScreen> {
   }
 
   Widget _buildGiftWidget(BuildContext context, String streamerName) {
-    final provider = Provider.of<LiveViewController>(context, listen: false);
+    final provider = Provider.of<LiveChatController>(context, listen: false);
     return GestureDetector(
       onTap: () => showDialog(
         context: context,
@@ -187,8 +187,8 @@ class _LiveScreenState extends State<LiveScreen> {
                 color: Palatte.themeGreenColor,
                 onTap: () {
                   if (provider.textController.text.isNotEmpty) {
-                    provider.handleSubmitted(
-                        provider.textController.text, true);
+                    // provider.sendChat(username, message);
+                    //? send donation part
                     NavigationHandler.pop(context);
                   }
                 },

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
@@ -117,6 +119,7 @@ class ProfileScreen extends StatelessWidget {
                                         await FirebaseAuth.instance.signOut();
                                         await pref.clear();
                                         if (context.mounted) {
+                                          log("navigated");
                                           NavigationHandler.navigateTo(
                                               context, const LoginScreen());
                                         }

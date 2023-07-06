@@ -22,6 +22,8 @@ class ForYouPage extends StatelessWidget {
           if (value.isFetching) {
             return progressIndicator(Colors.black);
           } else if (value.streamModel.lives != []) {
+
+
             return GridView.count(
               physics: const BouncingScrollPhysics(),
               shrinkWrap: true,
@@ -29,6 +31,7 @@ class ForYouPage extends StatelessWidget {
               childAspectRatio: 1 * 1 / 1.4,
               children: List.generate(value.streamModel.lives!.length, (index) {
                 final streamer = value.streamModel.lives![index];
+                log(streamer.user!.image.toString());
                 return GestureDetector(
                   onTap: () => NavigationHandler.navigateWithAnimation(
                       context, LiveScreen(streamer: streamer),

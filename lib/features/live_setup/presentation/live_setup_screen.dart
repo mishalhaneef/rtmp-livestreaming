@@ -4,6 +4,7 @@ import 'package:apivideo_live_stream/apivideo_live_stream.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:livestream/core/colors.dart';
+import 'package:livestream/features/live_chats/application/live_chat_controller.dart';
 import 'package:livestream/features/live_setup/application/live_setup_controller.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -77,7 +78,6 @@ class _LiveSetupScreenState extends State<LiveSetupScreen>
 
   //   super.dispose();
   // }
-  final bool _isStreaming = false;
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
@@ -259,21 +259,35 @@ class _LiveSetupScreenState extends State<LiveSetupScreen>
                 color: value.isStreaming ? Colors.grey : Colors.red,
                 onPressed: value.isStreaming
                     ? null
-                    : () {
-                        !_isStreaming
-                            ? value
-                                .onStartStreamingButtonPressed(userID ?? null)
-                            : value
-                                .onStartStreamingButtonPressed(userID ?? null);
+                    : () async {
+                        final liveChatController =
+                            Provider.of<LiveChatController>(context,
+                                listen: false);
+                        final userController =
+                            Provider.of<UserController>(context, listen: false);
+                        await liveChatController.createCollection(
+                            userController.userModel.user!.username);
+                        value.onStartStreamingButtonPressed(userID);
                       },
               ),
               IconButton(
-                icon: const Icon(Icons.stop),
-                color: value.isStreaming ? Colors.red : Colors.grey,
-                onPressed: value.isStreaming
-                    ? value.onStopStreamingButtonPressed
-                    : value.onStopStreamingButtonPressed,
-              )
+                  icon: const Icon(Icons.stop),
+                  color: value.isStreaming ? Colors.red : Colors.grey,
+                  onPressed: value.isStreaming
+                      ? () async {
+                          final liveChatController =
+                              Provider.of<LiveChatController>(context,
+                                  listen: false);
+                          final userController = Provider.of<UserController>(
+                              context,
+                              listen: false);
+
+                          await liveChatController.deleteCollection(
+                            userController.userModel.user!.username,
+                          );
+                          value.onStopStreamingButtonPressed();
+                        }
+                      : null)
             ],
           ),
         ),

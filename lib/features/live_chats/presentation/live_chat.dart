@@ -4,7 +4,6 @@ import 'package:livestream/core/constants.dart';
 import 'package:livestream/core/indicator.dart';
 import 'package:livestream/features/home/model/stream_model.dart';
 import 'package:livestream/features/live_chats/application/live_chat_controller.dart';
-import 'package:livestream/features/live_view/application/live_view_controller.dart';
 import 'package:provider/provider.dart';
 
 import '../../live_view/presentation/live_view_appbar.dart';
@@ -79,10 +78,13 @@ class LiveChat extends StatelessWidget {
                     opacity: value.totalCount >= 3 ? 0.4 : 1,
                     child: Row(
                       children: [
-                        const CircleAvatar(
+                        CircleAvatar(
                           maxRadius: 20,
-                          backgroundImage: NetworkImage(
-                              'https://i.pinimg.com/736x/4a/7c/e2/4a7ce2c18eaefdcd7786cabdb724a2ba.jpg'),
+                          backgroundImage: NetworkImage(value
+                                      .message!.username ==
+                                  'veuflow'
+                              ? 'https://www.seekpng.com/png/detail/75-754710_open-settings-icon.png'
+                              : 'https://i.pinimg.com/736x/4a/7c/e2/4a7ce2c18eaefdcd7786cabdb724a2ba.jpg'),
                         ),
                         const SizedBox(width: 10),
                         Column(
@@ -112,7 +114,7 @@ class LiveChat extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Consumer<LiveViewController>(
+            Consumer<LiveChatController>(
               builder: (context, value, child) => Container(
                 height: 55,
                 width: 324,
@@ -134,13 +136,17 @@ class LiveChat extends StatelessWidget {
                         suffixIcon: Padding(
                           padding: const EdgeInsets.only(right: 10),
                           child: GestureDetector(
-                              onTap: () => value.handleSubmitted(
-                                  value.textController.text, false),
+                              onTap: () => value.sendChat(
+                                    value.message!.username,
+                                    value.message!.message,
+                                  ),
                               child: const Icon(Icons.send,
                                   color: Palatte.hintColor)),
                         )),
-                    onSubmitted: (val) =>
-                        value.handleSubmitted(value.textController.text, false),
+                    onSubmitted: (val) => value.sendChat(
+                      value.message!.username,
+                      value.message!.message,
+                    ),
                   ),
                 ),
               ),

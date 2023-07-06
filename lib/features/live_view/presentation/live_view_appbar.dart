@@ -4,7 +4,7 @@ import 'package:livestream/routes/app_routes.dart';
 import 'package:provider/provider.dart';
 
 import '../../home/model/stream_model.dart';
-import '../application/live_view_controller.dart';
+import '../../live_chats/application/live_chat_controller.dart';
 
 class LiveViewAppBar extends StatelessWidget {
   const LiveViewAppBar({
@@ -18,10 +18,9 @@ class LiveViewAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Consumer<LiveViewController>(
+        Consumer<LiveChatController>(
           builder: (context, value, child) => IconButton(
             onPressed: () {
-              value.messages.clear();
               NavigationHandler.pop(context);
             },
             icon: Icon(

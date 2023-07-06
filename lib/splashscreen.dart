@@ -18,9 +18,9 @@ class SplashScreen extends StatelessWidget {
       const Duration(seconds: 2),
       () {
         if (authStaus == AuthState.authenticated) {
-          NavigationHandler.navigateTo(context, const RootScreen());
+          NavigationHandler.navigateOff(context, const RootScreen());
         } else {
-          NavigationHandler.navigateTo(context, const LoginScreen());
+          NavigationHandler.navigateOff(context, const LoginScreen());
         }
       },
     );
