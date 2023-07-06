@@ -16,7 +16,7 @@ class SplashLogo extends StatelessWidget {
       children: [
         Image.asset(AppIcon.appLogo, height: 150),
         Text(
-          'APP NAME',
+          'VUEFLOW',
           style: TextStyle(
             color: textColor,
             fontSize: 22,

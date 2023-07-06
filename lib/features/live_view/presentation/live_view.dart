@@ -1,17 +1,17 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_vlc_player/flutter_vlc_player.dart';
-import 'package:livestream/core/constants.dart';
+// import 'package:flutter_vlc_player/flutter_vlc_player.dart';
 import 'package:livestream/core/icons.dart';
 import 'package:livestream/features/live_view/application/live_view_controller.dart';
-import 'package:livestream/features/live_view/presentation/live_view_appbar.dart';
 import 'package:livestream/widgets/custom_button.dart';
 import 'package:provider/provider.dart';
+import 'package:video_player/video_player.dart';
 
 import '../../../core/colors.dart';
 import '../../../routes/app_routes.dart';
 import '../../home/model/stream_model.dart';
+import '../../live_chats/presentation/live_chat.dart';
 
 class LiveScreen extends StatefulWidget {
   const LiveScreen({super.key, required this.streamer});
@@ -23,7 +23,7 @@ class LiveScreen extends StatefulWidget {
 }
 
 class _LiveScreenState extends State<LiveScreen> {
-  late VlcPlayerController _videoPlayerController;
+  late VideoPlayerController _videoPlayerController;
 
   Future<void> initializePlayer() async {}
 
@@ -33,18 +33,32 @@ class _LiveScreenState extends State<LiveScreen> {
 
     log("URL : ${widget.streamer.url!.rtmp!}");
 
-    _videoPlayerController = VlcPlayerController.network(
-      widget.streamer.url!.rtmp!,
-      hwAcc: HwAcc.full,
-      autoPlay: false,
-      options: VlcPlayerOptions(),
-    );
+    _videoPlayerController =
+        VideoPlayerController.network(widget.streamer.url!.rtmp!)
+          ..initialize().then((_) {
+            setState(() {});
+          });
   }
+
+//? HLS video player initialization
+  //  late VideoPlayerController _controller;
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   log("URL : ${widget.streamer.url!.hls!}");
+  //   _controller =
+  //       VideoPlayerController.networkUrl(Uri.parse(widget.streamer.url!.hls!))
+  //         ..initialize().then((_) {
+  //           // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
+  //           setState(() {});
+  //         });
+  // }
 
   @override
   void dispose() async {
     super.dispose();
-    await _videoPlayerController.stopRendererScanning();
+    await _videoPlayerController.dispose();
   }
 
   @override
@@ -52,13 +66,21 @@ class _LiveScreenState extends State<LiveScreen> {
     return Scaffold(
       body: Stack(
         children: [
-          Center(
-            child: VlcPlayer(
-              controller: _videoPlayerController,
-              aspectRatio: 16 / 9,
-              placeholder: Center(child: CircularProgressIndicator()),
-            ),
-          ),
+          //? VLC PLAYER WIDGET
+          // Center(
+          //   child: VlcPlayer(
+          //     controller: _videoPlayerController,
+          //     aspectRatio: 16 / 9,
+          //     placeholder: const Center(child: CircularProgressIndicator()),
+          //   ),
+          // ),
+          //? video PLAYER WIDGET
+          _videoPlayerController.value.isInitialized
+              ? AspectRatio(
+                  aspectRatio: _videoPlayerController.value.aspectRatio,
+                  child: VideoPlayer(_videoPlayerController),
+                )
+              : Container(),
           Positioned(
             bottom: 0,
             left: 0,
@@ -94,106 +116,8 @@ class _LiveScreenState extends State<LiveScreen> {
               // color: Palatte.theme,
             ),
           ),
-          Column(
-            children: [
-              Constants.height50,
-              LiveViewAppBar(streamer: widget.streamer),
-              const Spacer(),
-              _buildLiveChats(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _buildCommentField(),
-                  // _buildGiftWidget(context, streamer),
-                ],
-              ),
-              Constants.height50,
-            ],
-          ),
+          LiveChat(streamer: widget.streamer),
         ],
-      ),
-    );
-  }
-
-  Consumer<LiveViewController> _buildLiveChats() {
-    return Consumer<LiveViewController>(
-      builder: (context, value, child) => ListView.separated(
-        physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.all(28.0),
-        reverse: true,
-        shrinkWrap: true,
-        itemCount: value.messages.length < 5 ? value.messages.length : 5,
-        itemBuilder: (context, index) {
-          final data = value.messages[index];
-          if (data.isDonation) {
-            return Opacity(
-              opacity: index >= 3 ? 0.4 : 1,
-              child: Row(
-                children: [
-                  const CircleAvatar(
-                    maxRadius: 20,
-                    backgroundImage: NetworkImage(
-                        'https://i.pinimg.com/736x/4a/7c/e2/4a7ce2c18eaefdcd7786cabdb724a2ba.jpg'),
-                  ),
-                  const SizedBox(width: 10),
-                  Container(
-                    decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(8)),
-                    child: Padding(
-                      padding: EdgeInsets.all(5.0),
-                      child: Row(
-                        children: [
-                          const Text(
-                            'Peter Parker Gifted  ',
-                            style: TextStyle(
-                              color: Color.fromARGB(255, 193, 193, 193),
-                            ),
-                          ),
-                          Text(
-                            '${data.message}\$ !!!',
-                            style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            );
-          } else {
-            return Opacity(
-              opacity: index >= 3 ? 0.4 : 1,
-              child: Row(
-                children: [
-                  const CircleAvatar(
-                    maxRadius: 20,
-                    backgroundImage: NetworkImage(
-                        'https://i.pinimg.com/736x/4a/7c/e2/4a7ce2c18eaefdcd7786cabdb724a2ba.jpg'),
-                  ),
-                  const SizedBox(width: 10),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Peter Parker',
-                        style: TextStyle(color: Colors.grey),
-                      ),
-                      Text(
-                        data.message,
-                        style:
-                            const TextStyle(color: Colors.white, fontSize: 16),
-                      ),
-                    ],
-                  )
-                ],
-              ),
-            );
-          }
-        },
-        separatorBuilder: (context, index) => Constants.height20,
       ),
     );
   }
@@ -284,41 +208,6 @@ class _LiveScreenState extends State<LiveScreen> {
           child: Image.asset(
             AppIcon.gift,
             height: 25,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildCommentField() {
-    return Consumer<LiveViewController>(
-      builder: (context, value, child) => Container(
-        height: 55,
-        width: 324,
-        decoration: BoxDecoration(
-          color: Palatte.textFieldColor.withOpacity(0.27),
-          border: Border.all(color: Palatte.strokeColor),
-          borderRadius: BorderRadius.circular(18),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.only(left: 20, bottom: 10, top: 10),
-          child: TextField(
-            style: const TextStyle(color: Colors.white),
-            controller: value.textController,
-            cursorColor: Colors.white,
-            decoration: InputDecoration(
-                hintText: 'Type Your Comment',
-                hintStyle: const TextStyle(color: Palatte.hintColor),
-                border: InputBorder.none,
-                suffixIcon: Padding(
-                  padding: const EdgeInsets.only(right: 10),
-                  child: GestureDetector(
-                      onTap: () => value.handleSubmitted(
-                          value.textController.text, false),
-                      child: const Icon(Icons.send, color: Palatte.hintColor)),
-                )),
-            onSubmitted: (val) =>
-                value.handleSubmitted(value.textController.text, false),
           ),
         ),
       ),
