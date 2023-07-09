@@ -23,7 +23,7 @@ class UserController extends ChangeNotifier {
   }
 
   Future<void> getUserDetails(String userID) async {
-    showLoadingIndicator();
+    // showLoadingIndicator();
 
     final response =
         await baseApiService.getApiCall('${ApiEndPoints.userDetails}$userID');
@@ -33,7 +33,8 @@ class UserController extends ChangeNotifier {
       userModel = userModelFromJson(jsonEncode(response.data));
       log('user name from model : ${userModel.user!.name}');
     }
+    notifyListeners();
 
-    hideLoadingIndicator();
+    // hideLoadingIndicator();
   }
 }

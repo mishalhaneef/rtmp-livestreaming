@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:livestream/chat_test.dart';
 import 'package:livestream/controller/bottom_nav_controller.dart';
 import 'package:livestream/controller/user_base_controller.dart';
 import 'package:livestream/core/enums.dart';
@@ -15,6 +14,7 @@ import 'package:livestream/features/search/application/search_controller.dart';
 import 'package:livestream/splashscreen.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:wakelock/wakelock.dart';
 
 import 'firebase_options.dart';
 import 'features/live_view/application/live_view_controller.dart';
@@ -27,7 +27,7 @@ void main() async {
   );
   FirebaseFirestore.instance.settings =
       const Settings(persistenceEnabled: false);
-
+  await Wakelock.enable();
   runApp(const MyApp());
 }
 

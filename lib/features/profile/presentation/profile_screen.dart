@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:livestream/controller/bottom_nav_controller.dart';
 import 'package:livestream/controller/user_base_controller.dart';
 import 'package:livestream/core/constants.dart';
 import 'package:livestream/core/indicator.dart';
@@ -58,10 +59,55 @@ class ProfileScreen extends StatelessWidget {
                     final settings = userProfileItems[index];
                     return GestureDetector(
                       onTap: () async {
-                        final pref = await SharedPreferences.getInstance();
-                        if (index == 3) {
-                          await pref.clear();
-                          await FirebaseAuth.instance.signOut();
+                        log('tapped setting : $settings');
+                        if (settings == 'Edit Profile') {
+                          NavigationHandler.navigateTo(
+                              context, EditScreen(user: value.userModel.user!));
+                        }
+                        if (settings == 'Privacy Policy') {
+                          NavigationHandler.navigateTo(
+                              context, PrivacyPolicyScreen());
+                        }
+                        if (settings == 'Log out') {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return Theme(
+                                data: ThemeData(
+                                  useMaterial3: true,
+                                ),
+                                child: AlertDialog(
+                                  title: const Text("Log Out?"),
+                                  content: const Text(
+                                      "Are you sure you want to logout from vueflow?"),
+                                  actions: [
+                                    TextButton(
+                                        onPressed: () {
+                                          NavigationHandler.pop(context);
+                                        },
+                                        child: const Text("Cancel")),
+                                    Consumer<BottomNavigationBarController>(
+                                      builder: (context, value, child) =>
+                                          ElevatedButton(
+                                        onPressed: () async {
+                                          final pref = await SharedPreferences
+                                              .getInstance();
+                                          await FirebaseAuth.instance.signOut();
+                                          await pref.clear();
+                                          if (context.mounted) {
+                                            NavigationHandler.navigateTo(
+                                                context, const LoginScreen());
+                                          }
+                                          value.changeScreen(0);
+                                        },
+                                        child: const Text('Logout'),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          );
                         }
                       },
                       child: Center(
@@ -96,35 +142,6 @@ class ProfileScreen extends StatelessWidget {
                                   //   return progressIndicator(Colors.black);
                                   // } else {
                                   return GestureDetector(
-                                    onTap: () async {
-                                      if (settings == 'Edit Profile') {
-                                        if (value.userModel.user == null) {
-                                          Fluttertoast.showToast(
-                                              msg:
-                                                  "Internet Problem, Try again");
-                                        } else {
-                                          NavigationHandler.navigateTo(
-                                              context,
-                                              EditScreen(
-                                                  user: value.userModel.user!));
-                                        }
-                                      }
-                                      if (settings == 'Privacy Policy') {
-                                        NavigationHandler.navigateTo(
-                                            context, PrivacyPolicyScreen());
-                                      }
-                                      if (settings == 'Log Out') {
-                                        final pref = await SharedPreferences
-                                            .getInstance();
-                                        await FirebaseAuth.instance.signOut();
-                                        await pref.clear();
-                                        if (context.mounted) {
-                                          log("navigated");
-                                          NavigationHandler.navigateTo(
-                                              context, const LoginScreen());
-                                        }
-                                      }
-                                    },
                                     child: Text(
                                       settings,
                                       style: const TextStyle(fontSize: 16),
@@ -134,18 +151,7 @@ class ProfileScreen extends StatelessWidget {
                                     // },
                                     ),
                                 InkWell(
-                                  onTap: () async {
-                                    final pref =
-                                        await SharedPreferences.getInstance();
-
-                                    await pref.clear();
-                                    await FirebaseAuth.instance.signOut();
-                                    Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => LoginScreen()),
-                                    );
-                                  },
+                                  onTap: () async {},
                                   child: Icon(
                                     settings == 'Log out'
                                         ? Icons.logout

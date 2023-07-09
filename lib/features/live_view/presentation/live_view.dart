@@ -1,6 +1,5 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
+import 'package:livestream/core/base_user_model.dart';
 // import 'package:flutter_vlc_player/flutter_vlc_player.dart';
 import 'package:livestream/core/icons.dart';
 import 'package:livestream/widgets/custom_button.dart';
@@ -14,51 +13,33 @@ import '../../live_chats/application/live_chat_controller.dart';
 import '../../live_chats/presentation/live_chat.dart';
 
 class LiveScreen extends StatefulWidget {
-  const LiveScreen({super.key, required this.streamer});
+  const LiveScreen({super.key, required this.streamer, required this.user});
 
   final Live streamer;
+  final UserData user;
 
   @override
   State<LiveScreen> createState() => _LiveScreenState();
 }
 
 class _LiveScreenState extends State<LiveScreen> {
-  late VideoPlayerController _videoPlayerController;
-
-  Future<void> initializePlayer() async {}
+  late VideoPlayerController _controller;
 
   @override
   void initState() {
     super.initState();
-
-    log("URL : ${widget.streamer.url!.wsFlv!}");
-
-    _videoPlayerController =
-        VideoPlayerController.network(widget.streamer.url!.wsFlv!)
+    _controller =
+        VideoPlayerController.networkUrl(Uri.parse(widget.streamer.url!.flv!))
           ..initialize().then((_) {
+            // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
             setState(() {});
           });
   }
 
-//? HLS video player initialization
-  //  late VideoPlayerController _controller;
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   log("URL : ${widget.streamer.url!.hls!}");
-  //   _controller =
-  //       VideoPlayerController.networkUrl(Uri.parse(widget.streamer.url!.hls!))
-  //         ..initialize().then((_) {
-  //           // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
-  //           setState(() {});
-  //         });
-  // }
-
   @override
   void dispose() async {
     super.dispose();
-    await _videoPlayerController.dispose();
+    await _controller.dispose();
   }
 
   @override
@@ -66,21 +47,15 @@ class _LiveScreenState extends State<LiveScreen> {
     return Scaffold(
       body: Stack(
         children: [
-          //? VLC PLAYER WIDGET
-          // Center(
-          //   child: VlcPlayer(
-          //     controller: _videoPlayerController,
-          //     aspectRatio: 16 / 9,
-          //     placeholder: const Center(child: CircularProgressIndicator()),
-          //   ),
-          // ),
           //? video PLAYER WIDGET
-          _videoPlayerController.value.isInitialized
-              ? AspectRatio(
-                  aspectRatio: _videoPlayerController.value.aspectRatio,
-                  child: VideoPlayer(_videoPlayerController),
-                )
-              : Container(),
+          Center(
+            child: _controller.value.isInitialized
+                ? AspectRatio(
+                    aspectRatio: _controller.value.aspectRatio,
+                    child: VideoPlayer(_controller),
+                  )
+                : Container(),
+          ),
           Positioned(
             bottom: 0,
             left: 0,
@@ -116,7 +91,7 @@ class _LiveScreenState extends State<LiveScreen> {
               // color: Palatte.theme,
             ),
           ),
-          LiveChat(streamer: widget.streamer),
+          LiveChat(streamer: widget.streamer, user: widget.user),
         ],
       ),
     );

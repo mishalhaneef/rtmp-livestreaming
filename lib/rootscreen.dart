@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:livestream/controller/bottom_nav_controller.dart';
 import 'package:livestream/core/colors.dart';
 import 'package:livestream/core/icons.dart';
-import 'package:livestream/features/chats/presentation/chats.dart';
 import 'package:livestream/features/home/presentation/home.dart';
 import 'package:livestream/features/live_setup/application/live_setup_controller.dart';
 import 'package:livestream/features/live_setup/presentation/live_setup_screen.dart';
@@ -17,7 +16,7 @@ class RootScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final pages = [
       const HomeScreen(),
-      const ChatScreen(),
+      // const ChatScreen(),
       const LiveSetupScreen(),
       const SearchScreen(),
       const ProfileScreen(),
@@ -44,12 +43,6 @@ class RootScreen extends StatelessWidget {
       BottomNavigationBarController value, BuildContext context) {
     return BottomNavigationBar(
       onTap: (index) {
-        // if (index == 2) {
-        //   const LiveSetupScreen();
-        //   // If the user taps on the LiveSetupScreen again, no need to show confirmation
-        //   return;
-        // }
-
         if (value.currentIndex == 2) {
           // Show the confirmation dialog when leaving the LiveSetupScreen
           final liveController =
@@ -60,7 +53,6 @@ class RootScreen extends StatelessWidget {
             value.changeScreen(index);
           }
         } else {
-          // Handle navigation to other screens
           value.changeScreen(index);
         }
       },
@@ -73,11 +65,11 @@ class RootScreen extends StatelessWidget {
           icon: _inActiveIcon(BottomNavIcons.unselectedhome),
           label: '',
         ),
-        BottomNavigationBarItem(
-          activeIcon: _activeIcon(BottomNavIcons.chats),
-          icon: _inActiveIcon(BottomNavIcons.unselectedchats),
-          label: '',
-        ),
+        // BottomNavigationBarItem(
+        //   activeIcon: _activeIcon(BottomNavIcons.chats),
+        //   icon: _inActiveIcon(BottomNavIcons.unselectedchats),
+        //   label: '',
+        // ),
         BottomNavigationBarItem(
           activeIcon: _activeIcon(BottomNavIcons.goLive, height: 50),
           icon: _inActiveIcon(BottomNavIcons.unselectedgoLive, height: 50),

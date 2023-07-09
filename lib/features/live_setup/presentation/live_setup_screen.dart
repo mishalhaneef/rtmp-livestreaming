@@ -249,11 +249,11 @@ class _LiveSetupScreenState extends State<LiveSetupScreen>
                 color: Palatte.themeGreenColor,
                 onPressed: value.onSwitchCameraButtonPressed,
               ),
-              IconButton(
-                icon: const Icon(Icons.mic_off),
-                color: Palatte.themeGreenColor,
-                onPressed: value.onToggleMicrophoneButtonPressed,
-              ),
+              // IconButton(
+              //   icon: const Icon(Icons.mic_off),
+              //   color: Palatte.themeGreenColor,
+              //   onPressed: value.onToggleMicrophoneButtonPressed,
+              // ),
               IconButton(
                 icon: const Icon(Icons.fiber_manual_record),
                 color: value.isStreaming ? Colors.grey : Colors.red,
