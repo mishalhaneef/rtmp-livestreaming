@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:livestream/controller/bottom_nav_controller.dart';
 import 'package:livestream/controller/user_base_controller.dart';
 import 'package:livestream/core/constants.dart';

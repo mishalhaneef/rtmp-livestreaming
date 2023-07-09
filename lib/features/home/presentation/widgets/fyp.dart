@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:livestream/core/indicator.dart';
 import 'package:livestream/features/home/application/home_controller.dart';
 import 'package:livestream/features/home/model/stream_model.dart';
+import 'package:livestream/features/live_view/application/live_view_controller.dart';
 import 'package:livestream/features/live_view/presentation/live_view.dart';
 import 'package:livestream/routes/app_routes.dart';
 import 'package:provider/provider.dart';
@@ -19,9 +20,13 @@ class ForYouPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userController = Provider.of<UserController>(context, listen: false);
+    final liveController =
+        Provider.of<LiveViewController>(context, listen: false);
+
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       // final pref = await SharedPreferences.getInstance();
       await UserPreferenceManager.getUserDetails(userController);
+      await liveController.getLiveViewCoun();
     });
     return Padding(
       padding: const EdgeInsets.all(18.0),
@@ -95,8 +100,11 @@ class ForYouPage extends StatelessWidget {
                                               size: 17,
                                             ),
                                             const SizedBox(width: 5),
+                                            // subscribers length is the live count
                                             Text(
-                                              streamer.v.toString(),
+                                              liveController.liveViewersModel
+                                                  .subscribers!.length
+                                                  .toString(),
                                               style: const TextStyle(
                                                 color: Colors.white,
                                               ),

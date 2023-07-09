@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:livestream/core/base_user_model.dart';
 import 'package:livestream/core/colors.dart';
 import 'package:livestream/core/constants.dart';
@@ -124,11 +125,17 @@ class LiveChat extends StatelessWidget {
                           padding: const EdgeInsets.only(right: 10),
                           child: GestureDetector(
                               onTap: () async {
-                                await value.sendChat(
-                                    user.username ?? '',
-                                    value.textController.text,
-                                    streamer.user!.username!,
-                                    DateTime.now().millisecondsSinceEpoch);
+                                if (value.textController.text == "" ||
+                                    value.textController.text == " ") {
+                                  Fluttertoast.showToast(
+                                      msg: "Please write something");
+                                } else {
+                                  await value.sendChat(
+                                      user.username ?? '',
+                                      value.textController.text,
+                                      streamer.user!.username!,
+                                      DateTime.now().millisecondsSinceEpoch);
+                                }
                                 await value.fetchMessages(
                                     streamer.user!.username!,
                                     sendChat: true);
