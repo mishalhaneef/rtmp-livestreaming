@@ -26,7 +26,6 @@ class ForYouPage extends StatelessWidget {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       // final pref = await SharedPreferences.getInstance();
       await UserPreferenceManager.getUserDetails(userController);
-      await liveController.getLiveViewCoun();
     });
     return Padding(
       padding: const EdgeInsets.all(18.0),
@@ -47,95 +46,10 @@ class ForYouPage extends StatelessWidget {
                     List.generate(value.streamModel.lives!.length, (index) {
                   final streamer = value.streamModel.lives![index];
                   log(streamer.user!.image.toString());
-                  return GestureDetector(
-                    onTap: () => NavigationHandler.navigateWithAnimation(
-                        context,
-                        LiveScreen(
-                            streamer: streamer,
-                            user: userController.userModel.user!),
-                        slide: Slides.slideUp),
-                    child: Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Stack(
-                        children: [
-                          const Center(
-                            child: CircularProgressIndicator.adaptive(),
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15),
-                              image: DecorationImage(
-                                  image: NetworkImage(streamer.user!.image!),
-                                  fit: BoxFit.cover),
-                            ),
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
-                                gradient: const LinearGradient(colors: [
-                                  Colors.black,
-                                  Colors.transparent,
-                                ], begin: Alignment.bottomCenter)),
-                          ),
-                          Column(
-                            children: [
-                              Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(0, 10, 10, 0),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(8),
-                                        color: Colors.black.withOpacity(0.6),
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(5.0),
-                                        child: Row(
-                                          children: [
-                                            const Icon(
-                                              Icons.remove_red_eye_outlined,
-                                              color: Colors.white,
-                                              size: 17,
-                                            ),
-                                            const SizedBox(width: 5),
-                                            // subscribers length is the live count
-                                            Text(
-                                              liveController.liveViewersModel
-                                                  .subscribers!.length
-                                                  .toString(),
-                                              style: const TextStyle(
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              const Spacer(),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(12),
-                                    child: Text(
-                                      streamer.user!.username ?? '',
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
+                  return LiveViewBuilder(
+                    streamer: streamer,
+                    userController: userController,
+                    liveController: liveController,
                   );
                 }),
               ),
@@ -151,6 +65,116 @@ class ForYouPage extends StatelessWidget {
             );
           }
         },
+      ),
+    );
+  }
+}
+
+class LiveViewBuilder extends StatelessWidget {
+  const LiveViewBuilder({
+    super.key,
+    required this.streamer,
+    required this.userController,
+    required this.liveController,
+  });
+
+  final Live streamer;
+  final UserController userController;
+  final LiveViewController liveController;
+
+  @override
+  Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      await liveController.getLiveViewCount(streamer.id!);
+    });
+    return GestureDetector(
+      onTap: () => NavigationHandler.navigateWithAnimation(context,
+          LiveScreen(streamer: streamer, user: userController.userModel.user!),
+          slide: Slides.slideUp),
+      child: Padding(
+        padding: const EdgeInsets.all(10),
+        child: Stack(
+          children: [
+            const Center(
+              child: CircularProgressIndicator.adaptive(),
+            ),
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+                image: DecorationImage(
+                    image: NetworkImage(streamer.user!.image!),
+                    fit: BoxFit.cover),
+              ),
+            ),
+            Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  gradient: const LinearGradient(colors: [
+                    Colors.black,
+                    Colors.transparent,
+                  ], begin: Alignment.bottomCenter)),
+            ),
+            Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 10, 10, 0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: Colors.black.withOpacity(0.6),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: Row(
+                            children: [
+                              const Icon(
+                                Icons.remove_red_eye_outlined,
+                                color: Colors.white,
+                                size: 17,
+                              ),
+                              const SizedBox(width: 5),
+                              // subscribers length is the live count
+
+                              Text(
+                                liveController.liveViewersModel.subscribers ==
+                                        null
+                                    ? '0'
+                                    : liveController
+                                        .liveViewersModel.subscribers!.length
+                                        .toString(),
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const Spacer(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: Text(
+                        streamer.user!.username ?? '',
+                        style: const TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

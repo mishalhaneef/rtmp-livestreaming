@@ -23,7 +23,7 @@ class BaseApiService {
         ),
         data: body,
       );
-      logApiResponse(response);
+      // logApiResponse(response);
       return response;
     } catch (e) {
       if (e is DioException) {
@@ -38,16 +38,25 @@ class BaseApiService {
     String apiUrl, {
     dynamic body,
     String? contentType,
+    bool disableBaseURL = false,
     // Map<String, dynamic>? queryParameters,
   }) async {
     log('api : ${ApiEndPoints.baseUrl + apiUrl}');
 
     try {
-      Response response = await dio.get(ApiEndPoints.baseUrl + apiUrl);
-      logApiResponse(response);
-      // print('awais check $response');
-      // log('awais check2 $response');
-      return response;
+      if (disableBaseURL) {
+        Response response = await dio.get(apiUrl);
+        // logApiResponse(response);
+        // print('awais check $response');
+        // log('awais check2 $response');
+        return response;
+      } else {
+        Response response = await dio.get(ApiEndPoints.baseUrl + apiUrl);
+        // logApiResponse(response);
+        // print('awais check $response');
+        // log('awais check2 $response');
+        return response;
+      }
     } catch (e) {
       if (e is DioException) {
         _handleApiError(e);
@@ -67,7 +76,7 @@ class BaseApiService {
       dio.options.headers = {'Content-Type': 'application/json'};
       Response response =
           await dio.post(ApiEndPoints.baseUrl + apiUrl, data: body);
-      logApiResponse(response);
+      // logApiResponse(response);
       return response;
     } catch (e) {
       if (e is DioException) {
@@ -107,7 +116,7 @@ class BaseApiService {
         ),
         data: formData,
       );
-      logApiResponse(response);
+      // logApiResponse(response);
       return response;
     } catch (e) {
       if (e is DioException) {
@@ -131,7 +140,7 @@ class BaseApiService {
         ),
         data: body,
       );
-      logApiResponse(response);
+      // logApiResponse(response);
       return response;
     } catch (e) {
       if (e is DioException) {
@@ -150,7 +159,7 @@ class BaseApiService {
     try {
       log(ApiEndPoints.baseUrl + apiUrl);
       Response response = await dio.delete(ApiEndPoints.baseUrl + apiUrl);
-      logApiResponse(response);
+      // logApiResponse(response);
       return response;
     } catch (e) {
       if (e is DioException) {

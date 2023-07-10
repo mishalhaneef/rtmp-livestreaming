@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 
 import '../../home/model/stream_model.dart';
 import '../../live_chats/application/live_chat_controller.dart';
+import '../application/live_view_controller.dart';
 
 class LiveViewAppBar extends StatelessWidget {
   const LiveViewAppBar({
@@ -16,6 +17,13 @@ class LiveViewAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final liveController =
+        Provider.of<LiveViewController>(context, listen: false);
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      // final pref = await SharedPreferences.getInstance();
+
+      await liveController.getLiveViewCount(streamer.id!);
+    });
     return Row(
       children: [
         Consumer<LiveChatController>(
@@ -92,7 +100,7 @@ class LiveViewAppBar extends StatelessWidget {
                     ),
                     const SizedBox(width: 5),
                     Text(
-                      streamer.v.toString(),
+                      liveController.viewCount.toString(),
                       style: const TextStyle(
                         color: Colors.white,
                       ),
