@@ -128,25 +128,25 @@ class _LiveSetupScreenState extends State<LiveSetupScreen>
               )
             ],
           ),
-          actions: <Widget>[
-            Consumer<LiveController>(
-              builder: (context, liveController, child) {
-                return PopupMenuButton<String>(
-                  color: Colors.black,
-                  onSelected: (choice) =>
-                      liveController.onMenuSelected(choice, context),
-                  itemBuilder: (BuildContext context) {
-                    return SettingConstants.choices.map((String choice) {
-                      return PopupMenuItem<String>(
-                        value: choice,
-                        child: Text(choice),
-                      );
-                    }).toList();
-                  },
-                );
-              },
-            )
-          ],
+          // actions: <Widget>[
+          //   Consumer<LiveController>(
+          //     builder: (context, liveController, child) {
+          //       return PopupMenuButton<String>(
+          //         color: Colors.black,
+          //         onSelected: (choice) =>
+          //             liveController.onMenuSelected(choice, context),
+          //         itemBuilder: (BuildContext context) {
+          //           return SettingConstants.choices.map((String choice) {
+          //             return PopupMenuItem<String>(
+          //               value: choice,
+          //               child: Text(choice),
+          //             );
+          //           }).toList();
+          //         },
+          //       );
+          //     },
+          //   )
+          // ],
         ),
         body: Center(
           child: Column(

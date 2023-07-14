@@ -45,7 +45,7 @@ class LiveChat extends StatelessWidget {
               final time = FirebaseFirestore.instance
                   .collection(streamer.user!.username!)
                   .orderBy(streamer.user!.username!, descending: true)
-                  .orderBy("time", descending: true);
+                  .orderBy("uploadedBy", descending: true);
               log('time : ${time.parameters}');
               return StreamBuilder<QuerySnapshot>(
                 stream: FirebaseFirestore.instance
@@ -131,10 +131,11 @@ class LiveChat extends StatelessWidget {
                                       msg: "Please write something");
                                 } else {
                                   await value.sendChat(
-                                      user.username ?? '',
-                                      value.textController.text,
-                                      streamer.user!.username!,
-                                      DateTime.now().millisecondsSinceEpoch);
+                                    user.username ?? '',
+                                    value.textController.text,
+                                    streamer.user!.username!,
+                                    // DateTime.now().millisecondsSinceEpoch,
+                                  );
                                 }
                                 await value.fetchMessages(
                                     streamer.user!.username!,

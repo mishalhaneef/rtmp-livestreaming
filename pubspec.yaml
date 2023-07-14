@@ -28,34 +28,24 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
-  cupertino_icons: ^1.0.2
-
-  # internet dependencies
   apivideo_live_stream: ^1.1.1
+  chewie: ^1.7.0
+  cloud_firestore: ^4.8.2
+  cupertino_icons: ^1.0.2
   dio: ^5.2.1+1
-
-  # firebase
   firebase_auth: ^4.6.3
   firebase_core: ^2.14.0
   firebase_storage: ^11.2.4
-  cloud_firestore: ^4.8.2
-
+  fl_video: ^1.3.0
   flutter:
     sdk: flutter
-
-  
   fluttertoast: ^8.2.2
   image_picker: ^0.8.9
   intl: ^0.18.1
   permission_handler: ^10.4.1
   provider: ^6.0.5
   shared_preferences: ^2.1.2
-
-  # video player
-  flutter_vlc_player: ^7.2.0
-  video_player: ^2.7.0
-
-  wakelock: ^0.6.2
+  wakelock_plus: ^1.0.0+3
 
 dev_dependencies:
   flutter_lints: ^2.0.0

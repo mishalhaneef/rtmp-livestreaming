@@ -20,9 +20,11 @@ class UserDetail extends StatelessWidget {
           Consumer<ProfileController>(
             builder: (context, value, child) {
               return GestureDetector(
-                onTap: () async {
-                  await value.selectImage();
-                },
+                onTap: isEdit
+                    ? () async {
+                        await value.selectImage();
+                      }
+                    : null,
                 child: Stack(
                   children: [
                     value.image != null

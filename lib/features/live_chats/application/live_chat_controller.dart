@@ -30,11 +30,11 @@ class LiveChatController extends ChangeNotifier {
         // ? enable this code if any message needs to show as admin
         // ? after stream
 
-        message = LiveMessageModel(
-          username: 'vueflow',
-          message: 'Welcome to Stream!',
-          time: DateTime.now().millisecondsSinceEpoch,
-        );
+        // message = LiveMessageModel(
+        //   username: 'vueflow',
+        //   message: 'Welcome to Stream!',
+        //   // time: DateTime.now().millisecondsSinceEpoch,
+        // );
 
         DocumentReference documentRef =
             await messageCollection.add(message!.toMap());
@@ -54,24 +54,24 @@ class LiveChatController extends ChangeNotifier {
   }
 
   Future<void> sendChat(
-      String username, String message, String streamerName, int time) async {
+      String username, String message, String streamerName) async {
     textController.clear();
 
     messagesList.insert(
       0,
-      LiveMessageModel(username: username, message: message, time: time),
+      LiveMessageModel(username: username, message: message),
     );
 
     notifyListeners();
 
     log("username :$username | message : $message | | streamname : $streamerName");
-    await _addChatMessage(username, message, streamerName, time)
+    await _addChatMessage(username, message, streamerName)
         .then((_) => log('Chat message added successfully'))
         .catchError((error) => log('Failed to add chat message: $error'));
   }
 
-  Future<void> _addChatMessage(String username, String userMessage,
-      String streamerName, int time) async {
+  Future<void> _addChatMessage(
+      String username, String userMessage, String streamerName) async {
     CollectionReference messageCollection = firestore.collection(streamerName);
     DocumentReference documentRef =
         messageCollection.doc(); // Generate a new document ID
@@ -79,7 +79,7 @@ class LiveChatController extends ChangeNotifier {
     Map<String, dynamic> chatData = {
       'username': username,
       'message': userMessage,
-      'time': time,
+      // 'time': time,
     };
 
     log('chat data : $chatData');

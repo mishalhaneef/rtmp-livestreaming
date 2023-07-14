@@ -102,17 +102,16 @@ class LiveController extends ChangeNotifier {
 
   Future<void> startStreaming(String? userID) async {
     final ApiVideoLiveStreamController? _controller = controller;
-    
+    if (userID == null) {
+      print('Error: UID is Empty d ');
+      return;
+    }
 
-    String rtmpUrl = "${ApiEndPoints.rtmpBaseUrl}/$userID";
-    String streamKey = "live";
+    String rtmpUrl = "${ApiEndPoints.rtmpBaseUrl}/live";
+    String streamKey = userID;
 
     if (_controller == null) {
       print('Error: create a camera controller first.');
-      return;
-    }
-    if (userID == null) {
-      print('Error: UID is Empty d ');
       return;
     }
 
@@ -174,8 +173,7 @@ class LiveController extends ChangeNotifier {
   void onStopStreamingButtonPressed() {
     isStreaming = false;
     notifyListeners();
-    stopStreaming().then((_) {
-    }).catchError((error) {
+    stopStreaming().then((_) {}).catchError((error) {
       log('error $error');
       if (error is PlatformException) {
         Fluttertoast.showToast(

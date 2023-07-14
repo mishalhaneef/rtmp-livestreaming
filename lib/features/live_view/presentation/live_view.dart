@@ -1,10 +1,16 @@
+import 'dart:developer';
+
+// import 'package:better_player/better_player.dart';
+// import 'package:fijkplayer/fijkplayer.dart';
+
+import 'package:chewie/chewie.dart';
+import 'package:fl_video/fl_video.dart';
 import 'package:flutter/material.dart';
 import 'package:livestream/core/base_user_model.dart';
 // import 'package:flutter_vlc_player/flutter_vlc_player.dart';
 import 'package:livestream/core/icons.dart';
 import 'package:livestream/widgets/custom_button.dart';
 import 'package:provider/provider.dart';
-import 'package:video_player/video_player.dart';
 
 import '../../../core/colors.dart';
 import '../../../routes/app_routes.dart';
@@ -23,23 +29,30 @@ class LiveScreen extends StatefulWidget {
 }
 
 class _LiveScreenState extends State<LiveScreen> {
-  late VideoPlayerController _controller;
+  late VideoPlayerController _videoPlayerController;
+  late ChewieController _chewieController;
 
   @override
   void initState() {
     super.initState();
-    _controller =
-        VideoPlayerController.networkUrl(Uri.parse(widget.streamer.url!.flv!))
-          ..initialize().then((_) {
-            // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
-            setState(() {});
-          });
+    initializePlayer();
   }
 
   @override
-  void dispose() async {
+  void dispose() {
+    _chewieController.dispose();
+    _videoPlayerController.dispose();
     super.dispose();
-    await _controller.dispose();
+  }
+
+  void initializePlayer() {
+    _videoPlayerController =
+        VideoPlayerController.network(widget.streamer.url!.hls!);
+    _chewieController = ChewieController(
+      videoPlayerController: _videoPlayerController,
+      autoPlay: true,
+      looping: true,
+    );
   }
 
   @override
@@ -48,13 +61,8 @@ class _LiveScreenState extends State<LiveScreen> {
       body: Stack(
         children: [
           //? video PLAYER WIDGET
-          Center(
-            child: _controller.value.isInitialized
-                ? AspectRatio(
-                    aspectRatio: _controller.value.aspectRatio,
-                    child: VideoPlayer(_controller),
-                  )
-                : Container(),
+          Chewie(
+            controller: _chewieController,
           ),
           Positioned(
             bottom: 0,
@@ -85,12 +93,12 @@ class _LiveScreenState extends State<LiveScreen> {
               ),
             ),
           ),
-          const Center(
-            child: CircularProgressIndicator.adaptive(
-              backgroundColor: Colors.white,
-              // color: Palatte.theme,
-            ),
-          ),
+          // const Center(
+          //   child: CircularProgressIndicator.adaptive(
+          //     backgroundColor: Colors.white,
+          //     // color: Palatte.theme,
+          //   ),
+          // ),
           LiveChat(streamer: widget.streamer, user: widget.user),
         ],
       ),

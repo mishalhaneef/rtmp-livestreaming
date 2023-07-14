@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:livestream/core/colors.dart';
@@ -20,6 +21,13 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final authController =
         Provider.of<AuthenticationController>(context, listen: false);
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if (kDebugMode) {
+        authController.emailController.text = 'mishal@gmail.com';
+        authController.passwordController.text = 'mishalkv123';
+      }
+    });
 
     return Scaffold(
       body: ListView(
@@ -93,8 +101,8 @@ class LoginScreen extends StatelessWidget {
                         } else if (password.isEmpty) {
                           Fluttertoast.showToast(msg: "Enter password");
                         } else {
-                          bool authenticated = await value
-                              .login(email, password);
+                          bool authenticated =
+                              await value.login(email, password);
 
                           if (authenticated) {
                             if (context.mounted) {

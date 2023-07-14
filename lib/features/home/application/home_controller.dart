@@ -11,15 +11,15 @@ class StreamDisplayController extends ChangeNotifier {
   BaseApiService baseApiService = BaseApiService();
   StreamModel streamModel = StreamModel();
 
-  Stream<List<StreamModel>> getLiveStream() {
+  Stream<StreamModel> getLiveStream() {
     return baseApiService.getApiCall(ApiEndPoints.lives).then((response) {
       if (response != null) {
-        return streamFromJson(jsonEncode(response.data)) as List<StreamModel>;
+        return streamFromJson(jsonEncode(response.data));
       }
-      return <StreamModel>[]; // Return an empty list if response is null
+      return StreamModel(lives: []); // Return an empty list if response is null
     }).catchError((error) {
       print('Error fetching live data: $error');
-      return <StreamModel>[]; // Return an empty list in case of error
+      return StreamModel(lives: []); // Return an empty list in case of error
     }).asStream();
   }
 

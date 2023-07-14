@@ -108,9 +108,12 @@ class _EditScreenState extends State<EditScreen> {
                   onTap: value.isFetching
                       ? null
                       : () async {
-                          await value.saveEditedProfileData(widget.user);
-                          if (context.mounted) {
-                            NavigationHandler.pop(context);
+                          final isUpdated =
+                              await value.saveEditedProfileData(widget.user);
+                          if (isUpdated) {
+                            if (context.mounted) {
+                              NavigationHandler.pop(context);
+                            }
                           }
                         },
                   color:

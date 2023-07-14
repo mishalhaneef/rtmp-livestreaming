@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
@@ -40,7 +41,7 @@ class ProfileController extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> saveEditedProfileData(UserData user) async {
+  Future<bool> saveEditedProfileData(UserData user) async {
     isFetching = true;
     notifyListeners();
 
@@ -77,15 +78,28 @@ class ProfileController extends ChangeNotifier {
 
         if (response != null) {
           log("response: ${response.data}");
-          Fluttertoast.showToast(msg: "Profile Updated");
+          Map<String, dynamic> res = json.decode(jsonEncode(response.data));
+
+          String message = res['msg'];
+
+          if (message == 'email_not_valid') {
+            Fluttertoast.showToast(msg: "please check your email again");
+
+            return false;
+          } else {
+            Fluttertoast.showToast(msg: "Profile Updated");
+            return true;
+          }
         }
       }
     } catch (e) {
       log("Error caught while saving edited profile");
+      return false;
     } finally {
       isFetching = false;
       notifyListeners();
     }
+    return false;
   }
 
   String getHintText(String settings, UserData user) {

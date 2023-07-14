@@ -4,12 +4,11 @@ import 'package:livestream/core/colors.dart';
 import 'package:livestream/core/constants.dart';
 import 'package:livestream/core/debouncer.dart';
 import 'package:livestream/core/indicator.dart';
+import 'package:livestream/features/profile/presentation/widget/user_details.dart';
 import 'package:livestream/features/search/application/search_controller.dart';
 import 'package:provider/provider.dart';
 
-import '../../../routes/app_routes.dart';
 import '../../../widgets/textfield.dart';
-import '../../chats/presentation/chat_room.dart';
 
 class SearchScreen extends StatelessWidget {
   const SearchScreen({super.key});
@@ -79,13 +78,20 @@ class SearchScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         GestureDetector(
-                          onTap: () => NavigationHandler.navigateTo(
-                              context,
-                              ChatRoom(
-                                userData: value.searchResult.users![index],
-                              )),
+                          onTap: () => showBottomSheet(
+                            elevation: 2,
+                            context: context,
+                            builder: (context) {
+                              return SizedBox(
+                                height: MediaQuery.of(context).size.height,
+                                child: Column(
+                                  children: [UserDetail(user: user)],
+                                ),
+                              );
+                            },
+                          ),
                           child: const Icon(
-                            CupertinoIcons.chat_bubble_fill,
+                            CupertinoIcons.right_chevron,
                             color: Palatte.themeGreenColor,
                           ),
                         )

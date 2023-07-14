@@ -35,24 +35,47 @@ class ForYouPage extends StatelessWidget {
           if (value.isFetching) {
             return progressIndicator(Colors.black);
           } else if (value.streamModel.lives != []) {
-            return StreamBuilder<List<StreamModel>>(
+            return StreamBuilder<StreamModel>(
               stream: value.getLiveStream(),
-              builder: (context, snapshot) => GridView.count(
-                physics: const BouncingScrollPhysics(),
-                shrinkWrap: true,
-                crossAxisCount: 2,
-                childAspectRatio: 1 * 1 / 1.4,
-                children:
-                    List.generate(value.streamModel.lives!.length, (index) {
-                  final streamer = value.streamModel.lives![index];
-                  log(streamer.user!.image.toString());
-                  return LiveViewBuilder(
-                    streamer: streamer,
-                    userController: userController,
-                    liveController: liveController,
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  log(snapshot.error.toString());
+                  return Text('Error: ${snapshot.error}');
+                } else if (snapshot.hasData) {
+                  log('live data : ${value.streamModel.lives}');
+                  if (value.streamModel.lives!.isEmpty) {
+                    return const Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(height: 100),
+                        Text('No Live'),
+                      ],
+                    );
+                  } else {
+                    return GridView.count(
+                      physics: const BouncingScrollPhysics(),
+                      shrinkWrap: true,
+                      crossAxisCount: 2,
+                      childAspectRatio: 1 * 1 / 1.4,
+                      children: List.generate(value.streamModel.lives!.length,
+                          (index) {
+                        final streamer = value.streamModel.lives![index];
+                        log(streamer.user!.image.toString());
+                        return LiveViewBuilder(
+                          streamer: streamer,
+                          userController: userController,
+                          liveController: liveController,
+                          index: index,
+                        );
+                      }),
+                    );
+                  }
+                } else {
+                  return const Center(
+                    child: Text('No Live'),
                   );
-                }),
-              ),
+                }
+              },
             );
           } else {
             return const Center(
@@ -76,11 +99,13 @@ class LiveViewBuilder extends StatelessWidget {
     required this.streamer,
     required this.userController,
     required this.liveController,
+    required this.index,
   });
 
   final Live streamer;
   final UserController userController;
   final LiveViewController liveController;
+  final int index;
 
   @override
   Widget build(BuildContext context) {
@@ -139,12 +164,9 @@ class LiveViewBuilder extends StatelessWidget {
                               // subscribers length is the live count
 
                               Text(
-                                liveController.liveViewersModel.subscribers ==
-                                        null
+                                liveController.liveViewersModel.live == null
                                     ? '0'
-                                    : liveController
-                                        .liveViewersModel.subscribers!.length
-                                        .toString(),
+                                    : liveController.viewCount.toString(),
                                 style: const TextStyle(
                                   color: Colors.white,
                                 ),
