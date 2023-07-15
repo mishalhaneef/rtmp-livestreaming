@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:livestream/controller/bottom_nav_controller.dart';
 import 'package:livestream/core/colors.dart';
@@ -7,6 +9,7 @@ import 'package:livestream/features/live_setup/application/live_setup_controller
 import 'package:livestream/features/live_setup/presentation/live_setup_screen.dart';
 import 'package:livestream/features/profile/presentation/profile_screen.dart';
 import 'package:livestream/features/search/presentation/search.dart';
+import 'package:livestream/routes/app_routes.dart';
 import 'package:provider/provider.dart';
 
 class RootScreen extends StatelessWidget {
@@ -25,13 +28,13 @@ class RootScreen extends StatelessWidget {
     return Consumer<BottomNavigationBarController>(
       builder: (context, value, child) => Scaffold(
         body: Scaffold(
-          appBar: PreferredSize(
-            preferredSize: const Size.fromHeight(20),
-            child: AppBar(
-              backgroundColor: Colors.grey[50],
-              elevation: 0,
-            ),
-          ),
+          // appBar: PreferredSize(
+          //   preferredSize: const Size.fromHeight(20),
+          //   child: AppBar(
+          //     backgroundColor: Colors.grey[50],
+          //     elevation: 0,
+          //   ),
+          // ),
           body: pages[value.currentIndex],
         ),
         bottomNavigationBar: _bottomNavigationBar(value, context),
@@ -43,15 +46,9 @@ class RootScreen extends StatelessWidget {
       BottomNavigationBarController value, BuildContext context) {
     return BottomNavigationBar(
       onTap: (index) {
-        if (value.currentIndex == 2) {
-          // Show the confirmation dialog when leaving the LiveSetupScreen
-          final liveController =
-              Provider.of<LiveController>(context, listen: false);
-          if (liveController.isStreaming) {
-            showLeaveStreamConfirmationDialog(context, value, index);
-          } else {
-            value.changeScreen(index);
-          }
+        log("Current index : ${value.currentIndex}");
+        if (value.currentIndex == 0) {
+          NavigationHandler.navigateTo(context, const LiveSetupScreen());
         } else {
           value.changeScreen(index);
         }

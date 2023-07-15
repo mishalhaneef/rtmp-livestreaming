@@ -37,6 +37,7 @@ class ProfileScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                 Constants.height30,
                 const Padding(
                   padding: EdgeInsets.only(left: 20),
                   child: Text(

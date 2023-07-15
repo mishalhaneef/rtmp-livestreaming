@@ -96,7 +96,6 @@ class LiveController extends ChangeNotifier {
       Fluttertoast.showToast(msg: 'Error: create a camera controller first.');
       return;
     }
-
     return await liveStreamController.toggleMute();
   }
 

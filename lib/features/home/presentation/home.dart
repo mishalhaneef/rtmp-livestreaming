@@ -34,6 +34,7 @@ class HomeScreen extends StatelessWidget {
           return ListView(
             physics: const BouncingScrollPhysics(),
             children: [
+              Constants.height30,
               WelcomeText(userFullName: value.userModel.user!.name),
               Constants.height20,
               _buildFYPlabel(),
