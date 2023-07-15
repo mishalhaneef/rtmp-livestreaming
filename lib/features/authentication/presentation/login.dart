@@ -24,7 +24,7 @@ class LoginScreen extends StatelessWidget {
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (kDebugMode) {
-        authController.emailController.text = 'mishal@gmail.com';
+        authController.emailController.text = 'mishalhaneefpersonal@gmail.com';
         authController.passwordController.text = 'mishalkv123';
       }
     });
@@ -115,6 +115,26 @@ class LoginScreen extends StatelessWidget {
                 color: value.isFetching ? Colors.grey : Palatte.themeGreenColor,
               ),
             ),
+          ),
+          Constants.height20,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                "Forgot password? ",
+                style: TextStyle(),
+              ),
+              GestureDetector(
+                onTap: () async {
+                  await authController.sendPasswordResetEmail(
+                      authController.emailController.text);
+                },
+                child: const Text(
+                  "Reset here",
+                  style: TextStyle(color: Colors.blue),
+                ),
+              ),
+            ],
           )
         ],
       ),

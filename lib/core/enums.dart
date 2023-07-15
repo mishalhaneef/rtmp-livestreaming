@@ -4,4 +4,5 @@ enum AuthState {
   newUser,
   sessionExpired,
   waiting,
+  pendingEmailVerification,
 }

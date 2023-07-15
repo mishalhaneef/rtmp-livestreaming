@@ -24,4 +24,6 @@ class AppIcon {
 class AppImages {
   static const imageNotAvailable =
       "https://t3.ftcdn.net/jpg/04/62/93/66/360_F_462936689_BpEEcxfgMuYPfTaIAOC1tCDurmsno7Sp.jpg";
+  static const emailVerification =
+      "https://media.istockphoto.com/id/1388787982/vector/open-envelope-with-check-document-icon-in-excellent-flat-design-vector-illustration-eps10.jpg?s=612x612&w=0&k=20&c=BWuoArx53bCbmWh0dg1fwzSMYgu5te26HBP_iNgSbxo=";
 }

@@ -113,19 +113,35 @@ class _LiveSetupScreenState extends State<LiveSetupScreen>
           title: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(
-                value.userModel.user!.username ?? 'Live Stream',
-                style: const TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
+              if (value.userModel.user == null)
+                const Text(
+                  'Offline',
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontWeight: FontWeight.bold,
+                  ),
+                )
+              else
+                Text(
+                  value.userModel.user!.username ?? 'Live Stream',
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
               const SizedBox(width: 5),
-              const Icon(
-                Icons.verified,
-                color: Colors.blue,
-                size: 15,
-              )
+              if (value.userModel.user == null)
+                const Icon(
+                  Icons.wifi_off_rounded,
+                  color: Colors.grey,
+                  size: 20,
+                )
+              else
+                const Icon(
+                  Icons.verified,
+                  color: Colors.blue,
+                  size: 15,
+                )
             ],
           ),
           // actions: <Widget>[
@@ -156,56 +172,57 @@ class _LiveSetupScreenState extends State<LiveSetupScreen>
                   padding: const EdgeInsets.all(1.0),
                   child: Center(
                     child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                          boxShadow: const [
-                            BoxShadow(color: Colors.grey, blurRadius: 10),
-                            BoxShadow(
-                              color: Colors.grey,
-                              blurRadius: 10,
-                            ),
-                          ],
-                        ),
-                        child: Consumer<LiveController>(
-                          builder: (context, liveController, child) => Stack(
-                            children: [
-                              ApiVideoCameraPreview(
-                                  controller: liveController.controller),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Container(
-                                  decoration: BoxDecoration(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: const [
+                          BoxShadow(color: Colors.grey, blurRadius: 10),
+                          BoxShadow(
+                            color: Colors.grey,
+                            blurRadius: 10,
+                          ),
+                        ],
+                      ),
+                      child: Consumer<LiveController>(
+                        builder: (context, liveController, child) => Stack(
+                          children: [
+                            ApiVideoCameraPreview(
+                                controller: liveController.controller),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color: liveController.isStreaming
+                                        ? Colors.red
+                                        : Colors.grey,
+                                    borderRadius: BorderRadius.circular(5)),
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                    left: 10,
+                                    right: 10,
+                                    top: 5,
+                                    bottom: 5,
+                                  ),
+                                  child: Text(
+                                    'Live',
+                                    style: TextStyle(
                                       color: liveController.isStreaming
-                                          ? Colors.red
-                                          : Colors.grey,
-                                      borderRadius: BorderRadius.circular(5)),
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                      left: 10,
-                                      right: 10,
-                                      top: 5,
-                                      bottom: 5,
-                                    ),
-                                    child: Text(
-                                      'Live',
-                                      style: TextStyle(
-                                        color: liveController.isStreaming
-                                            ? Colors.white
-                                            : const Color.fromARGB(
-                                                255,
-                                                111,
-                                                111,
-                                                111,
-                                              ),
-                                      ),
+                                          ? Colors.white
+                                          : const Color.fromARGB(
+                                              255,
+                                              111,
+                                              111,
+                                              111,
+                                            ),
                                     ),
                                   ),
                                 ),
-                              )
-                            ],
-                          ),
-                        )),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ),

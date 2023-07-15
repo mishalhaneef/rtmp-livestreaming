@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:developer';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:livestream/configs/api_base_service.dart';
@@ -15,7 +17,11 @@ class AuthenticationController extends ChangeNotifier {
   TextEditingController usernameController = TextEditingController();
 
   FirebaseAuthService firebaseAuthService = FirebaseAuthService();
+  FirebaseAuth auth = FirebaseAuth.instance;
+
   BaseApiService baseApiService = BaseApiService();
+  bool isEmailVerificationSent = false;
+  bool isEmailVerified = false;
 
   bool isSigned = false;
   bool isFetching = false;
@@ -100,6 +106,8 @@ class AuthenticationController extends ChangeNotifier {
             PreferenceConstants.userID,
             loginResponseModel.user!.sId!,
           );
+          await userCredential.user!.sendEmailVerification();
+
           return true;
         }
       }
@@ -110,5 +118,40 @@ class AuthenticationController extends ChangeNotifier {
       notifyListeners();
     }
     return false;
+  }
+
+  void emailVerificationChecking() {
+    Timer.periodic(const Duration(seconds: 3), (timer) async {
+      await FirebaseAuth.instance.currentUser!.reload();
+      isEmailVerified = FirebaseAuth.instance.currentUser!.emailVerified;
+      log(isEmailVerified.toString());
+      if (isEmailVerified) {
+        timer.cancel();
+        Fluttertoast.showToast(
+            msg: "Email verification complete. You're all set to get started.");
+        notifyListeners();
+      }
+    });
+  }
+
+  Future resendVerificationLink() async {
+    final currentUser = FirebaseAuth.instance.currentUser;
+    await currentUser!.sendEmailVerification();
+    notifyListeners();
+    Fluttertoast.showToast(
+        msg: "Email verification sent. Please confirm your email address.");
+  }
+
+  Future sendPasswordResetEmail(String userEmail) async {
+    try {
+      await auth.sendPasswordResetEmail(email: userEmail);
+      Fluttertoast.showToast(
+          msg:
+              'Password reset email sent to $userEmail. Please check your inbox');
+    } on FirebaseAuthException catch (e) {
+      log('Failed to reset password: ${e.message}');
+      Fluttertoast.showToast(
+          msg: 'Failed to update password. Please try again.: ${e.message}');
+    }
   }
 }

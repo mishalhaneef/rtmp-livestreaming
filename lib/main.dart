@@ -81,7 +81,12 @@ class MyApp extends StatelessWidget {
             stream: FirebaseAuth.instance.authStateChanges(),
             builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
               if (snapshot.hasData) {
-                return const SplashScreen(authStaus: AuthState.authenticated);
+                if (snapshot.data!.emailVerified) {
+                  return const SplashScreen(authStaus: AuthState.authenticated);
+                } else {
+                  return const SplashScreen(
+                      authStaus: AuthState.pendingEmailVerification);
+                }
               } else {
                 return const SplashScreen(authStaus: AuthState.newUser);
               }

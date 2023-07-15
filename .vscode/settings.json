@@ -1,3 +1,5 @@
 {
-    "java.configuration.updateBuildConfiguration": "interactive"
+    "java.configuration.updateBuildConfiguration": "interactive",
+    "java.project.sourcePaths": [],
+    "cmake.sourceDirectory": "/Users/mishalhaneef/Documents/flutter/Freelance/livestream/windows/flutter"
 }

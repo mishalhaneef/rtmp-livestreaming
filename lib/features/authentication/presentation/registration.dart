@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:livestream/rootscreen.dart';
+import 'package:livestream/features/authentication/presentation/email_verification.dart';
 import 'package:livestream/core/colors.dart';
 import 'package:livestream/core/constants.dart';
 import 'package:livestream/features/authentication/application/authentication_controller.dart';
@@ -99,8 +99,7 @@ class RegistrationScreen extends StatelessWidget {
                         } else if (email.isEmpty) {
                           Fluttertoast.showToast(msg: 'Enter Email');
                         } else {
-                          bool authenticated =
-                              await value.register(
+                          bool authenticated = await value.register(
                             username,
                             fullName,
                             email,
@@ -109,7 +108,7 @@ class RegistrationScreen extends StatelessWidget {
                           if (authenticated) {
                             if (context.mounted) {
                               NavigationHandler.navigateOff(
-                                  context, const RootScreen());
+                                  context, const EmailVerification());
                             }
                           }
                         }

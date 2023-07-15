@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:livestream/features/authentication/presentation/email_verification.dart';
 import 'package:livestream/rootscreen.dart';
 import 'package:livestream/core/colors.dart';
 import 'package:livestream/core/enums.dart';
@@ -19,6 +20,8 @@ class SplashScreen extends StatelessWidget {
       () {
         if (authStaus == AuthState.authenticated) {
           NavigationHandler.navigateOff(context, const RootScreen());
+        } else if (authStaus == AuthState.pendingEmailVerification) {
+          NavigationHandler.navigateOff(context, const EmailVerification());
         } else {
           NavigationHandler.navigateOff(context, const LoginScreen());
         }
