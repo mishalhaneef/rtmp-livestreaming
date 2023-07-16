@@ -47,7 +47,7 @@ class RootScreen extends StatelessWidget {
     return BottomNavigationBar(
       onTap: (index) {
         log("Current index : ${value.currentIndex}");
-        if (value.currentIndex == 0) {
+        if (index == 1) {
           NavigationHandler.navigateTo(context, const LiveSetupScreen());
         } else {
           value.changeScreen(index);
